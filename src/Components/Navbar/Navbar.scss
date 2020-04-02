@@ -1,0 +1,31 @@
+.Navbar {
+  display: flex;
+  justify-content: space-between;
+  background: #1d1f2b;
+  height: 6rem;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 40rem;
+  z-index: 5;
+}
+@media only screen and (min-width: 500px) {
+  .Navbar {
+    height: 4rem;
+  }
+}
+
+.NavItem {
+  height: 100%;
+  width: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.NavItem:hover {
+  cursor: pointer;
+}
+.NavImg {
+  height: 50%;
+  width: 50%;
+}

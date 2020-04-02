@@ -1,26 +1,36 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Feed from "./Components/Feed/Feed";
+import Navbar from "./Components/Navbar/Navbar";
+import Statistics from "./Components/Statistics/Statistics";
+
+class App extends Component {
+  constructor() {
+    super();
+    this.state = {};
+  }
+  render() {
+    return (
+      <Router>
+        <Switch>
+          <Route
+            path="/statistics"
+            render={props => {
+              return <Statistics {...props} />;
+            }}
+          ></Route>
+          <Route
+            path="/"
+            render={props => {
+              return <Feed {...props} />;
+            }}
+          ></Route>
+        </Switch>
+        <Route render={props => <Navbar {...props} />}></Route>
+      </Router>
+    );
+  }
 }
 
 export default App;

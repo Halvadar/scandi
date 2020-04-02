@@ -1,0 +1,99 @@
+.Statistic {
+  display: flex;
+  flex-direction: column;
+  background: #161823;
+  width: 100%;
+}
+
+.GoBack_LogoCont {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  margin: 2rem;
+}
+
+.GoBack {
+  position: absolute;
+  left: 0;
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  border: 1px solid gray;
+  padding: 0.5rem;
+}
+.Logo {
+  display: flex;
+  align-items: center;
+  color: white;
+  font-size: 1.4rem;
+}
+.LogoImg {
+  margin: 0 1rem;
+  width: 2rem;
+  height: 2rem;
+}
+.Months {
+  display: flex;
+  width: max-content;
+  background: #0e0f1a;
+}
+.Month {
+  padding: 1rem;
+  margin: 0 1rem;
+  color: rgb(189, 189, 189);
+  font-size: 30px;
+}
+
+.MonthsContainer {
+  overflow-x: scroll;
+}
+.Chart {
+  display: flex;
+  justify-content: center;
+  margin: 4rem 0 4rem 0;
+}
+/* .Diagram {
+  width: 600px;
+  height: 400px;
+} */
+.Circle {
+  width: 13rem;
+  height: 13rem;
+  border-radius: 50%;
+  background: #0e0f1a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.Circle1 {
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  background: #161823;
+}
+
+::-webkit-scrollbar-thumb {
+  background: blue;
+  border-radius: 3px;
+  width: 10px;
+}
+::-webkit-scrollbar {
+  height: 5px;
+}
+
+@media only screen and (min-width: 500px) {
+  .Month {
+    font-size: 20px;
+  }
+  .GoBack {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+  .LogoImg {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+  ::-webkit-scrollbar {
+    height: 10px;
+  }
+}
