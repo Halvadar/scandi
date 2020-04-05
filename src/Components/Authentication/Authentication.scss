@@ -1,0 +1,69 @@
+.AuthenticationContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  margin: auto;
+  color: rgb(94, 185, 94);
+  font-size: large;
+  text-align: center;
+}
+.PleaseEnter {
+  margin: 3rem;
+}
+%loginpsw {
+  margin: 2rem auto;
+  height: 3rem;
+  width: 100%;
+}
+.Login {
+  @extend %loginpsw;
+}
+.Password {
+  @extend %loginpsw;
+}
+
+.Input {
+  height: 100%;
+  width: 100%;
+  padding: 2px 2rem;
+  font-size: 1.5rem;
+  box-sizing: border-box;
+  color: rgb(92, 92, 92);
+}
+.SubmitButton {
+  background: rgb(81, 63, 247);
+  border-radius: 5%;
+  width: 7rem;
+  height: 3rem;
+  margin: 2rem;
+  color: rgb(174, 223, 255);
+  font-size: 1.5rem;
+  padding: 0;
+}
+.LoggedIn {
+  margin: 2rem;
+  font-size: 1.3rem;
+}
+.LogOut {
+  background: rgb(255, 147, 147);
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  padding: 0.5rem;
+  color: white;
+  margin: 1rem;
+}
+.ErrorMessage {
+  height: 2rem;
+  text-align: center;
+  color: red;
+  font-size: 1.3rem;
+}
+@media only screen and(min-width:500px) {
+  .AuthenticationContainer {
+    width: 70%;
+  }
+}

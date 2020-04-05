@@ -3,13 +3,33 @@
   flex-direction: column;
   background: #161823;
   width: 100%;
+  padding-bottom: 8rem;
 }
 
 .GoBack_LogoCont {
   display: flex;
   justify-content: center;
   position: relative;
-  margin: 2rem;
+  margin: 4rem 2rem 2rem 2rem;
+}
+.DiagramClickInfo {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid white;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.DiagramClickInfo:hover {
+  cursor: pointer;
+}
+.DiagramClickInside {
+  background: white;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
 }
 
 .GoBack {
@@ -33,6 +53,7 @@
   height: 2rem;
 }
 .Months {
+  margin-top: 2rem;
   display: flex;
   width: max-content;
   background: #0e0f1a;
@@ -43,6 +64,9 @@
   color: rgb(189, 189, 189);
   font-size: 30px;
 }
+.Month:hover {
+  cursor: pointer;
+}
 
 .MonthsContainer {
   overflow-x: scroll;
@@ -50,12 +74,10 @@
 .Chart {
   display: flex;
   justify-content: center;
-  margin: 4rem 0 4rem 0;
+  margin: 4rem auto 2rem auto;
+  width: fit-content;
 }
-/* .Diagram {
-  width: 600px;
-  height: 400px;
-} */
+
 .Circle {
   width: 13rem;
   height: 13rem;
@@ -70,6 +92,158 @@
   height: 10rem;
   border-radius: 50%;
   background: #161823;
+}
+.DataInfoCont {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(236, 236, 236);
+  margin-bottom: 2rem;
+  height: 4rem;
+}
+.DataInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.DataName {
+  color: rgb(163, 163, 163);
+}
+.CenterBalance {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  width: fit-content;
+  flex-direction: column;
+  align-items: center;
+}
+.BalanceNumber {
+  color: white;
+  font-size: 1.2rem;
+}
+.Balance {
+  color: rgb(163, 163, 163);
+  font-size: 1.1rem;
+  padding-top: 5px;
+}
+.IncomeExpense {
+  display: flex;
+  justify-content: center;
+}
+.Income {
+  padding: 1rem 1.5rem;
+  border-radius: 5%;
+  border: 1px solid blue;
+  margin: 0 2rem;
+  font-size: 2rem;
+  color: white;
+}
+.Expense {
+  padding: 1rem 1.5rem;
+  border-radius: 5%;
+  border: 1px solid red;
+  margin: 0 2rem;
+  font-size: 2rem;
+  color: white;
+}
+.YouNeedToSignIn {
+  font-size: 1.5rem;
+  color: rgb(255, 110, 110);
+  margin: 3rem auto;
+}
+
+.AddData {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 3rem auto;
+  width: 100%;
+}
+.IncomeInputCont {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  color: rgb(81, 190, 81);
+  font-size: 1.3rem;
+  align-items: center;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgb(255, 138, 138);
+}
+
+.DataAddCont {
+  display: flex;
+  margin: 2rem;
+  color: rgb(0, 30, 128);
+  flex-wrap: wrap;
+  width: 90%;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(170, 170, 255);
+  box-sizing: border-box;
+}
+.IncomeInput {
+  height: 2rem;
+  font-size: 1.5rem;
+  padding: 2px;
+  width: 50%;
+  margin: 2rem;
+}
+.DataAddValueCont {
+  position: relative;
+  display: flex;
+}
+.AddAnotherValue {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+  height: 70%;
+}
+.SecondValueInputCont {
+  position: relative;
+}
+.DataAddNameCont {
+  display: flex;
+  margin: 1rem;
+  justify-items: center;
+}
+.DataAddNameInput {
+  height: 2rem;
+  font-size: 1.1rem;
+  width: 100%;
+}
+.AddData input {
+  border-radius: 5px;
+  border: 1px solid black;
+  padding: 5px;
+  box-sizing: border-box;
+  margin: 0 0.5rem;
+}
+.AddAnotherMonthData {
+  display: flex;
+  justify-content: center;
+}
+.AddAnotherMonthData:hover {
+  cursor: pointer;
+}
+.ChangeDataEntries {
+  display: flex;
+  justify-content: center;
+  margin: 3rem 0 0 0;
+}
+.ChangeDataEntriesButton {
+  background: rgba(135, 241, 135, 0.137);
+  color: white;
+  font-size: 1.3rem;
+  border-radius: 5px;
+  width: fit-content;
+  padding: 0.5rem;
+  border: 0;
+}
+.ChangeDataEntriesButton:hover {
+  background: rgb(133, 248, 133);
 }
 
 ::-webkit-scrollbar-thumb {

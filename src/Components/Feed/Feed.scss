@@ -8,6 +8,11 @@ body {
   position: relative;
   padding-bottom: 8rem;
 }
+.MainContainer {
+  background: #161823;
+  min-height: 100vh;
+  max-height: max-content;
+}
 @media only screen and (min-width: 500px) {
   body {
     padding-bottom: 4rem;

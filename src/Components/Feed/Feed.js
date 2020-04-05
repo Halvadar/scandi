@@ -50,8 +50,8 @@ export class Feed extends Component {
               <div className="Date">28 July</div>
             </div>
             <div className="Likes">
-              <img className="LikeImages" src={image1}></img>
-              <img className="LikeImages" src={image2}></img>
+              <img className="LikeImages" alt="LikedBy" src={image1}></img>
+              <img className="LikeImages" alt="LikedBy" src={image2}></img>
               <div className="LikeCount">+76</div>
               <span className="LikedThis"> Liked this</span>
             </div>

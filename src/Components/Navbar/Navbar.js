@@ -10,10 +10,10 @@ export default class Navbar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: null
+      url: null,
     };
   }
-  NavLink = a => {
+  NavLink = (a) => {
     return () => {
       this.props.history.push(a);
       this.setState({ url: a });
@@ -22,19 +22,19 @@ export default class Navbar extends Component {
   render() {
     return (
       <div className="Navbar">
-        {Images.map(img => {
+        {Images.map((img) => {
           let Url = img.match(/((?<=media\/).*?(?=\.))/gs)[0];
-          console.log(img);
+
           return (
             <div
               style={{
                 background:
-                  this.state.url === Url ? "rgba(114, 114, 114) " : null
+                  this.state.url === Url ? "rgba(114, 114, 114) " : null,
               }}
               className="NavItem"
               onClick={this.NavLink(Url)}
             >
-              <img src={img} className="NavImg" />
+              <img src={img} alt="NavImg" className="NavImg" />
             </div>
           );
         })}
