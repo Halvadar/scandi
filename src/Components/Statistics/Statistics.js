@@ -7,6 +7,8 @@ import * as Functions from "./Functions";
 import Plus from "./Plus.svg";
 import Minus from "./minus.svg";
 import PlusData from "./PlusData.svg";
+import Income from "./Income.svg";
+import Expense from "./Expense.svg";
 
 export default class Statistics extends Component {
   constructor() {
@@ -41,7 +43,7 @@ export default class Statistics extends Component {
   componentDidUpdate() {}
 
   componentDidMount() {
-    if (window.screen.height > 500) {
+    if (window.screen.width > 500) {
       this.setState({ CanvasHeightWidth: [300, 450] });
     }
 
@@ -55,7 +57,7 @@ export default class Statistics extends Component {
     window.removeEventListener("resize", this.ResizeFunc);
   }
   ResizeFunc = () => {
-    if (window.screen.height > 500) {
+    if (window.screen.width > 500) {
       this.setState({ CanvasHeightWidth: [300, 450] });
     } else {
       this.setState({ CanvasHeightWidth: [200, 200] });
@@ -97,21 +99,51 @@ export default class Statistics extends Component {
     ];
     let TotalSpent = 0;
     let Balance;
+    let BalanceFloored;
     let DecimalPart;
+    let IncomeFloored;
+    let IncomeDecimal;
+    let ExpenseFloored;
+    let ExpenseDecimal;
     this.state.CurrentMonth &&
       this.state.CurrentMonth.data.forEach((a) => {
         a.data.forEach((b) => {
           TotalSpent = TotalSpent + b;
         });
       });
-    Balance =
-      this.state.CurrentMonth && this.state.CurrentMonth.income - TotalSpent;
-    let DataEntryAmount = [];
-    let i;
-    for (i = 0; i < this.state.DataEntryAmount; i++) {
-      DataEntryAmount.push(0);
+    if (this.state.CurrentMonth && this.state.CurrentMonth.income) {
+      Balance = this.state.CurrentMonth.income - TotalSpent;
+      let DataEntryAmount = [];
+      let i;
+      for (i = 0; i < this.state.DataEntryAmount; i++) {
+        DataEntryAmount.push(0);
+      }
+      BalanceFloored = Balance > 0 ? Math.floor(Balance) : Math.ceil(Balance);
+      DecimalPart = (Balance > 0
+        ? Balance - BalanceFloored
+        : BalanceFloored - Balance
+      )
+        .toFixed(2)
+        .toString()
+        .slice(2, 4);
+      IncomeFloored =
+        this.state.CurrentMonth.income > 0
+          ? Math.floor(this.state.CurrentMonth.income)
+          : Math.ceil(this.state.CurrentMonth.income);
+      IncomeDecimal = (this.state.CurrentMonth.income > 0
+        ? this.state.CurrentMonth.income - IncomeFloored
+        : IncomeFloored - this.state.CurrentMonth.income
+      )
+        .toFixed(2)
+        .toString()
+        .slice(2, 4);
+      ExpenseFloored = Math.floor(TotalSpent);
+
+      ExpenseDecimal = (TotalSpent - ExpenseFloored)
+        .toFixed(2)
+        .toString()
+        .slice(2, 4);
     }
-    DecimalPart = (Balance - Math.floor(Balance)).toFixed(2).toString();
 
     return (
       <div className="Statistic">
@@ -225,12 +257,12 @@ export default class Statistics extends Component {
                     : null}
                   <div className="CenterBalance">
                     <div className="BalanceNumber">
-                      ${this.state.CurrentMonth && Math.floor(Balance)}
+                      ${Balance < 0 && Balance > -1 && "-"}
+                      {this.state.CurrentMonth && BalanceFloored}
                       <div className="DecimalPortion">
-                        {Balance - Math.floor(Balance) !== 0 && DecimalPart}
+                        {this.state.CurrentMonth && DecimalPart}
                       </div>
                     </div>
-
                     <div className="Balance">Balance</div>
                   </div>
                 </div>
@@ -247,10 +279,18 @@ export default class Statistics extends Component {
                 <div className="IncomeExpense">
                   <div className="Income">
                     +$
-                    {this.state.CurrentMonth && this.state.CurrentMonth.income}
+                    {this.state.CurrentMonth && IncomeFloored}
+                    <div className="DecimalPortionIncomeExpense">
+                      {this.state.CurrentMonth && IncomeDecimal}
+                      <img src={Income}></img>
+                    </div>
                   </div>
                   <div className="Expense">
-                    -${this.state.CurrentMonth && TotalSpent}
+                    -${this.state.CurrentMonth && ExpenseFloored}
+                    <div className="DecimalPortionIncomeExpense">
+                      {this.state.CurrentMonth && ExpenseDecimal}
+                      <img src={Expense}></img>
+                    </div>
                   </div>
                 </div>
               </React.Fragment>

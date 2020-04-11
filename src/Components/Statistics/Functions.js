@@ -77,7 +77,7 @@ export const DiagramFunc = async function (Month, wind) {
   await DiagramCanvas.arc(
     DiagramWidth / 2,
     DiagramHeight / 2,
-    wind.screen.height > 500 ? 90 : 50,
+    wind.screen.width > 500 ? 90 : 50,
     0,
     2 * Math.PI
   );
@@ -193,13 +193,13 @@ export const DiagramFunc = async function (Month, wind) {
   let t;
   for (t = 0; t < data.length; t++) {
     if ((t + 1) % 2 === 0) {
-      if (wind.screen.height > 500) {
+      if (wind.screen.width > 500) {
         await SectorMaker(130, data[t]);
       } else {
         await SectorMaker(90, data[t]);
       }
     } else {
-      if (wind.screen.height > 500) {
+      if (wind.screen.width > 500) {
         await SectorMaker(120, data[t]);
       } else {
         await SectorMaker(80, data[t]);

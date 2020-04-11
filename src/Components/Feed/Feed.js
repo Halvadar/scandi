@@ -39,7 +39,7 @@ export class Feed extends Component {
             className="AddYourPostImg"
             onClick={this.AddYourPost}
           ></img>
-          <div> Add New Post</div>
+          <div> Add a New Post</div>
         </div>
         {this.props.FeedItems.map((a, b) => {
           let likes = 0;
@@ -59,7 +59,11 @@ export class Feed extends Component {
                 })`,
               }}
             >
-              <div className="Upper" onClick={this.goToPost(`/post/${b}`)}>
+              <div
+                title="Go To Post"
+                className="Upper"
+                onClick={this.goToPost(`/post/${b}`)}
+              >
                 <div className="LinearGrad"></div>
                 <div className="Title TitleFeed">{a.title}</div>
               </div>
@@ -100,10 +104,7 @@ export class Feed extends Component {
                     {likes - 1 >= 0 ? "+" : null}
                     {likes}
                   </div>
-                  <span className="LikedThis">
-                    {" "}
-                    {likes - 1 >= 0 ? "Liked this" : "Disliked this"}
-                  </span>
+                  <span className="LikedThis">Liked This</span>
                 </div>
               </div>
             </div>

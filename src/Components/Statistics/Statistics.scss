@@ -134,7 +134,15 @@
   align-items: flex-start;
 }
 .DecimalPortion {
-  font-size: 0.5rem;
+  font-size: 0.7rem;
+}
+.DecimalPortionIncomeExpense {
+  padding: 3px 0;
+  font-size: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 0 3px;
 }
 .Balance {
   color: rgb(163, 163, 163);
@@ -149,20 +157,24 @@
 .Income {
   padding: 0.5rem 0.7rem;
   border-radius: 5%;
-  border: 1px solid blue;
+  border: 1px solid rgb(112, 112, 255);
   margin: 1rem 2rem;
   font-size: 2rem;
   color: white;
   box-sizing: border-box;
+  position: relative;
+  display: flex;
 }
 .Expense {
   padding: 0.5rem 0.7rem;
   border-radius: 5%;
-  border: 1px solid red;
+  border: 1px solid rgb(255, 100, 100);
   margin: 1rem 2rem;
   font-size: 2rem;
   color: white;
   box-sizing: border-box;
+  position: relative;
+  display: flex;
 }
 .YouNeedToSignIn {
   padding: 5px;

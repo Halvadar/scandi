@@ -48,10 +48,12 @@
   display: flex;
 }
 .LikeImage {
-  margin: 0.5rem;
+  margin: 0.7rem;
+  position: relative;
 }
 .LikeImage:hover {
   cursor: pointer;
+  bottom: 3px;
 }
 
 .IndividualComment {
