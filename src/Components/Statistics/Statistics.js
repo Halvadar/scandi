@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import "./Statistics.scss";
 import statistics from "../Navbar/statistics.svg";
 import Arrow from "./Arrow.svg";
-import { StatisticsData } from "../../Data";
+
 import * as Functions from "./Functions";
 import Plus from "./Plus.svg";
 import Minus from "./minus.svg";
@@ -69,8 +69,7 @@ export default class Statistics extends Component {
     return () => {
       this.setState({ MonthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
       let AnimationArrCopy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      let AnimationArrcopy1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-      console.log(AnimationArrcopy1);
+
       let Variable = 0;
       this.interval = setInterval(() => {
         if (this.state.MonthAnimations[b] < 10) {
@@ -185,6 +184,7 @@ export default class Statistics extends Component {
                   ].map((a, b) => {
                     return (
                       <div
+                        key={b}
                         ref={(t) => (this[a] = t)}
                         style={{
                           background:
@@ -231,6 +231,7 @@ export default class Statistics extends Component {
                     ? this.state.ChartXYPositions.map((val, ind) => {
                         return (
                           <div
+                            key={ind}
                             onClick={this.DiagramInfoOnClick(
                               ind,
                               this.state.CurrentMonth.data
@@ -282,14 +283,14 @@ export default class Statistics extends Component {
                     {this.state.CurrentMonth && IncomeFloored}
                     <div className="DecimalPortionIncomeExpense">
                       {this.state.CurrentMonth && IncomeDecimal}
-                      <img src={Income}></img>
+                      <img alt="Income" src={Income}></img>
                     </div>
                   </div>
                   <div className="Expense">
                     -${this.state.CurrentMonth && ExpenseFloored}
                     <div className="DecimalPortionIncomeExpense">
                       {this.state.CurrentMonth && ExpenseDecimal}
-                      <img src={Expense}></img>
+                      <img alt="Expense" src={Expense}></img>
                     </div>
                   </div>
                 </div>
@@ -325,12 +326,9 @@ export default class Statistics extends Component {
                   <div style={{ margin: "1rem" }}>Add Your Spendings</div>
                 </div>
                 {this.state.TwoValues.map((a, b) => {
-                  console.log(
-                    this.state.CurrentMonth && this.state.CurrentMonth.data[b]
-                  );
                   return (
                     <React.Fragment>
-                      <div className="DataAddCont">
+                      <div key={b} className="DataAddCont">
                         {b !== 0 ? (
                           <div
                             onClick={() => {
@@ -338,7 +336,12 @@ export default class Statistics extends Component {
                             }}
                             className="DeleteDataEntry"
                           >
-                            <img height="100%" width="100%" src={Minus}></img>
+                            <img
+                              alt="Minus"
+                              height="100%"
+                              width="100%"
+                              src={Minus}
+                            ></img>
                           </div>
                         ) : null}
                         <div className="DataAddNameCont">
@@ -414,6 +417,7 @@ export default class Statistics extends Component {
                             }}
                           >
                             <img
+                              alt=""
                               src={this.state.TwoValues[b] ? Minus : Plus}
                               height="100%"
                             ></img>
@@ -427,7 +431,12 @@ export default class Statistics extends Component {
                   className="AddAnotherMonthData"
                   onClick={this.AddAnotherDataEntry}
                 >
-                  <img src={PlusData} height="40px" width="40px"></img>
+                  <img
+                    alt="AddAnother"
+                    src={PlusData}
+                    height="40px"
+                    width="40px"
+                  ></img>
                 </div>
                 <div className="Submit">
                   <button

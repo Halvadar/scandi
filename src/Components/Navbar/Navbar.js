@@ -23,11 +23,12 @@ export default class Navbar extends Component {
   render() {
     return (
       <div className="Navbar">
-        {Images.map((img) => {
+        {Images.map((img, ind) => {
           let Url = img.match(/((?<=media).*?(?=\.))/gs)[0];
 
           return (
             <div
+              key={ind}
               style={{
                 background:
                   this.props.location.pathname === Url

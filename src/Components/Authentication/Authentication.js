@@ -151,7 +151,6 @@ export default class Authentication extends Component {
               </div>
               <div className="Submit">
                 <button
-                  title="Hey"
                   onClick={this.AddNewOrLogin}
                   className="SubmitButton"
                   placeholder="Submit"

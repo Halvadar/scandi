@@ -60,6 +60,7 @@ export default class Post extends Component {
               FeedItemsCopy[this.state.postID].likedby[index].likestatus = a;
               return like;
             }
+            return;
           }
         );
         if (!FoundLike) {
@@ -88,7 +89,6 @@ export default class Post extends Component {
         likes -= 1;
       }
     });
-    console.log(this.state.post);
 
     return (
       <React.Fragment>
@@ -143,9 +143,10 @@ export default class Post extends Component {
                         ></img>
                       </React.Fragment>
                     ) : (
-                      post.likedby.map((a) => {
+                      post.likedby.map((a, b) => {
                         return (
                           <img
+                            key={b}
                             className="LikeImages"
                             alt="LikedBy"
                             src={a.image}
@@ -165,6 +166,7 @@ export default class Post extends Component {
                   {this.props.LoggedIn ? (
                     <div className="LikePost">
                       <img
+                        alt="Like"
                         className="LikeImage"
                         height="20px"
                         width="20px"
@@ -172,6 +174,7 @@ export default class Post extends Component {
                         onClick={this.LikeDislike("like")}
                       ></img>
                       <img
+                        alt="Dislike"
                         className="LikeImage"
                         height="20px"
                         width="20px"
@@ -214,6 +217,7 @@ export default class Post extends Component {
                 {reversedcomments.map((a, b) => {
                   return (
                     <div
+                      key={b}
                       ref={
                         b === 0
                           ? (r) => {

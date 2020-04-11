@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./Feed.scss";
-import AxiosInstance from "../../Configs/AxiosConfig";
-import { Feed as FeedData } from "../../Data";
+
 import image0 from "./image0.png";
 import image1 from "./image1.png";
 import image2 from "./image2.png";
@@ -16,10 +15,6 @@ import Plus from "../Statistics/PlusData.svg";
 let backgrounds = [background0, background1, background2];
 let images = [image0, image1, image2, image3, image4, image5];
 export class Feed extends Component {
-  constructor() {
-    super();
-  }
-
   goToPost = (arg) => {
     return () => {
       this.props.history.push(arg);
@@ -30,11 +25,11 @@ export class Feed extends Component {
   };
 
   render() {
-    console.log(this.props.FeedItems);
     return (
       <div className="FeedContainer">
         <div className="AddYourPost">
           <img
+            alt="Add a New post"
             src={Plus}
             className="AddYourPostImg"
             onClick={this.AddYourPost}
@@ -52,6 +47,7 @@ export class Feed extends Component {
           });
           return (
             <div
+              key={b}
               className="FeedItem"
               style={{
                 backgroundImage: `url(${
@@ -90,9 +86,10 @@ export class Feed extends Component {
                       ></img>
                     </React.Fragment>
                   ) : (
-                    a.likedby.map((a) => {
+                    a.likedby.map((a, b) => {
                       return (
                         <img
+                          key={b}
                           className="LikeImages"
                           alt="LikedBy"
                           src={a.image}

@@ -135,6 +135,7 @@ class App extends Component {
                   style={{ right: this.state.DistanceFromRight + 20 + "px" }}
                 >
                   <img
+                    alt="Profile"
                     onMouseEnter={() => this.setState({ ShowUserName: true })}
                     onMouseLeave={() => this.setState({ ShowUserName: false })}
                     src={this.state.Image}
