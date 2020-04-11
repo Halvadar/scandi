@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./Authentication.scss";
+import Arrow from "../Statistics/Arrow.svg";
 let NewAccStats = [
   "January",
   "February",
@@ -24,19 +25,22 @@ export default class Authentication extends Component {
       ErrorMessage: "",
     };
   }
-  componentDidUpdate() {}
+  componentWillUnmount() {
+    this.AuthenticPage.removeEventListener("keypress", (a) => {
+      if (a.key === "Enter") {
+        this.AddNewOrLogin();
+      }
+    });
+  }
   componentDidMount() {
     if (!window.localStorage.Accounts) {
       window.localStorage.setItem("Accounts", JSON.stringify([]));
-    } else {
-      this.props.SetLocalStorageParsed(
-        JSON.parse(window.localStorage.Accounts)
-      );
     }
+    this.props.SetLocalStorageParsed(JSON.parse(window.localStorage.Accounts));
     if (!this.props.LoggedIn) {
       this.Login.focus();
     }
-    window.addEventListener("keypress", (a) => {
+    this.AuthenticPage.addEventListener("keypress", (a) => {
       if (a.key === "Enter") {
         this.AddNewOrLogin();
       }
@@ -52,73 +56,112 @@ export default class Authentication extends Component {
         return null;
       });
       if (FoundAccount) {
-        console.log(FoundAccount.Login);
         if (this.Password.value === FoundAccount.Password) {
-          this.props.SetUser(FoundAccount.Login, FoundAccount.Statistics);
+          this.props.SetUser(
+            FoundAccount.Login,
+            FoundAccount.Statistics,
+            FoundAccount.Image
+          );
           this.setState({ ErrorMessage: "" });
         } else {
+          this.AuthenticPage.scrollIntoView();
           this.setState({ ErrorMessage: "Password Doesnt Match" });
         }
       } else {
-        localStorage.setItem(
-          "Accounts",
-          JSON.stringify([
-            ...JSON.parse(localStorage.Accounts),
-            {
-              Login: this.Login.value,
-              Password: this.Password.value,
-              Statistics: NewAccStats,
-            },
-          ])
-        );
-        this.setState({ ErrorMessage: "" });
-        this.props.SetUser(this.Login.value, NewAccStats);
+        if (this.ProfilePic.value.length > 0) {
+          localStorage.setItem(
+            "Accounts",
+            JSON.stringify([
+              ...JSON.parse(localStorage.Accounts),
+              {
+                Login: this.Login.value,
+                Password: this.Password.value,
+                Statistics: NewAccStats,
+                Image: this.ProfilePic.value,
+              },
+            ])
+          );
+          this.setState({ ErrorMessage: "" });
+          this.props.SetUser(
+            this.Login.value,
+            NewAccStats,
+            this.ProfilePic.value
+          );
+        } else {
+          this.AuthenticPage.scrollIntoView();
+          this.setState({ ErrorMessage: "Image Is Required For a New User" });
+        }
       }
     }
   };
 
   render() {
     return (
-      <div className="AuthenticationContainer">
-        {this.props.LoggedIn ? (
-          <React.Fragment>
-            <div className="LoggedIn">You Logged In Successfully</div>
-            <button className="LogOut" onClick={this.props.LogOut}>
-              Log Out
-            </button>
-          </React.Fragment>
-        ) : (
-          <React.Fragment>
-            <div className="PleaseEnter">
-              Please Enter Your Login and Password (You Will be Auto Registered)
-            </div>
-            <div className="ErrorMessage">{this.state.ErrorMessage}</div>
-            <div className="Login">
-              <input
-                ref={(a) => (this.Login = a)}
-                className="Input"
-                placeholder="Login"
-              ></input>
-            </div>
-            <div type="password" className="Password">
-              <input
-                className="Input"
-                ref={(a) => (this.Password = a)}
-                placeholder="Password"
-              ></input>
-            </div>
-            <div className="Submit">
-              <button
-                onClick={this.AddNewOrLogin}
-                className="SubmitButton"
-                placeholder="Submit"
-              >
-                Submit
+      <React.Fragment>
+        <div
+          onClick={() => {
+            this.props.history.push("/feed");
+          }}
+          className="AuthenticationGoBack"
+        >
+          <img src={Arrow} alt="GoBack" className="GoBack"></img>
+        </div>
+        <div
+          className="AuthenticationContainer"
+          ref={(a) => (this.AuthenticPage = a)}
+        >
+          {this.props.LoggedIn ? (
+            <React.Fragment>
+              <div className="LoggedIn">You Logged In Successfully</div>
+              <button className="LogOut" onClick={this.props.LogOut}>
+                Log Out
               </button>
-            </div>
-          </React.Fragment>
-        )}
-      </div>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <div className="PleaseEnter">
+                Please Enter Your Login and Password (You Will be Auto
+                Registered)
+              </div>
+              <div className="ErrorMessage">{this.state.ErrorMessage}</div>
+              <div className="Login">
+                <input
+                  ref={(a) => (this.Login = a)}
+                  className="Input"
+                  placeholder="Login"
+                ></input>
+              </div>
+              <div type="password" className="Password">
+                <input
+                  className="Input"
+                  ref={(a) => (this.Password = a)}
+                  placeholder="Password"
+                ></input>
+              </div>
+              <div className="ProfilePic">
+                <div style={{ marginBottom: "1rem" }}>
+                  {" "}
+                  Not Required if Already registered{" "}
+                </div>
+                <input
+                  className="Input"
+                  ref={(a) => (this.ProfilePic = a)}
+                  placeholder="Profile Image Url"
+                ></input>
+              </div>
+              <div className="Submit">
+                <button
+                  onClick={this.AddNewOrLogin}
+                  className="SubmitButton"
+                  placeholder="Submit"
+                >
+                  Submit
+                </button>
+              </div>
+            </React.Fragment>
+          )}
+        </div>
+      </React.Fragment>
     );
   }
 }

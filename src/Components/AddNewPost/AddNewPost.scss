@@ -1,0 +1,50 @@
+.AddNewPostCont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 95%;
+  margin: auto;
+
+  color: rgb(193, 255, 193);
+  font-size: 1.2rem;
+}
+
+.AddNewPostCont > div {
+  margin: 1rem;
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.AddNewPostCont > div > input {
+  width: 100%;
+  margin: 1rem;
+  height: 2rem;
+  padding: 3px;
+  font-size: 1.2rem;
+}
+.AddaNewPost {
+  color: rgb(144, 183, 255);
+  font-size: 1.5rem;
+  margin-top: 4rem !important;
+}
+.AddNewPostTextInput {
+  width: 100%;
+  height: 10rem;
+  padding: 5px;
+  margin: 1rem;
+}
+.AddNewPostSubmit {
+  height: 3rem;
+  width: 5rem;
+  align-self: flex-end;
+  background: rgb(154, 194, 255);
+  color: white;
+  border-radius: 5px;
+  border: 0;
+}
+@media only screen and (min-width: 500px) {
+  .AddNewPostCont > div {
+    width: 70%;
+  }
+}

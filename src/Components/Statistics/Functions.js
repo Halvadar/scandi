@@ -4,11 +4,12 @@ export const DiagramFunc = async function (Month, wind) {
     ChartXYPositions: [],
     InfoIndex: [],
     CurrentData: null,
+    EditMode: false,
+    DataEntryAmount: 1,
+    TwoValues: [false],
   });
-  console.log(Month);
-  if (this.state.CurrentMonth.data.length === 0) {
-    return;
-  }
+  console.log("Month", Month);
+
   let scroller = async () => {
     let ElementDistanceFromLeft = this[Month.month];
     let ElementWidth = window
@@ -29,14 +30,13 @@ export const DiagramFunc = async function (Month, wind) {
       0,
       MonthsScrollBarWidth.length - 2
     );
-    console.log(ElementDistanceFromLeft.offsetLeft);
+
     if (
       ElementDistanceFromLeft.offsetLeft <
         MonthsContainerWidth - MonthsScrollBarWidth / 2 ||
       ElementDistanceFromLeft.offsetRight <
         MonthsContainerWidth - MonthsScrollBarWidth / 2
     ) {
-      console.log("passed");
       this.MonthsScrollBar.scrollLeft =
         ElementDistanceFromLeft.offsetLeft -
         MonthsScrollBarWidth / 2 +
@@ -44,14 +44,13 @@ export const DiagramFunc = async function (Month, wind) {
     }
   };
   await scroller();
-
-  console.log(this.MonthsScrollBar.scrollLeft);
-
+  if (this.state.CurrentMonth.data.length === 0) {
+    return;
+  }
   let dataSum = 0;
   let data = Month.data;
   data.forEach((a) => {
     a.data.forEach((b) => {
-      console.log(b);
       dataSum = dataSum + b;
     });
   });
@@ -92,7 +91,6 @@ export const DiagramFunc = async function (Month, wind) {
       return { InfoIndex: [...PrevState.InfoIndex, null] };
     });
     let LineagGradStartEndSetter = async (Degree, index) => {
-      console.log(Degree, index);
       let LinearGradYStart = DiagramHeight / 2 - Math.sin(Degree) * -radius;
 
       let LinearGradXStart = DiagramWidth / 2 + Math.cos(Degree) * radius;
@@ -129,12 +127,7 @@ export const DiagramFunc = async function (Month, wind) {
           };
         });
       }
-      console.log([
-        LinearGradXStart,
-        LinearGradYStart,
-        LinearGradXEnd,
-        LinearGradYEnd,
-      ]);
+
       return [
         LinearGradXStart,
         LinearGradYStart,
@@ -175,7 +168,7 @@ export const DiagramFunc = async function (Month, wind) {
     await DiagramCanvas.fill();
     DegreeCalculator =
       DegreeCalculator + (value.data[0] * 2 * Math.PI) / dataSum;
-    console.log(DegreeCalculator, "DegreeCalc");
+
     if (value.data.length > 1) {
       await DiagramCanvas.beginPath();
       await DiagramCanvas.moveTo(DiagramWidth / 2, DiagramHeight / 2);
@@ -195,7 +188,6 @@ export const DiagramFunc = async function (Month, wind) {
       await DiagramCanvas.fill();
       DegreeCalculator =
         DegreeCalculator + (value.data[1] * 2 * Math.PI) / dataSum;
-      console.log(DegreeCalculator, "DegreeCalc");
     }
   };
   let t;
@@ -229,6 +221,142 @@ export const DiagramInfoOnClick = function (arg, data) {
   };
 };
 
-export const MonthDataSetter = function (value, data) {
-  return () => {};
+export const SubmitData = async function () {
+  if (
+    this.IncomeInput.value.length > 0 &&
+    this["DataAddNameInput0"] &&
+    this["DataAddNameInput0"].value.length > 0 &&
+    this["DataAddValueInput0"] &&
+    this["DataAddValueInput0"].value.length > 0
+  ) {
+    await this.setState({ Errors: "" });
+    let CurrentStatistics = [...this.props.Statistics];
+    CurrentStatistics = CurrentStatistics.map((a) => {
+      if (a.month === this.state.CurrentMonth.month) {
+        let NewData = { ...a };
+        NewData.income = parseFloat(this["IncomeInput"].value);
+        NewData.data = [];
+        this.state.TwoValues.forEach((e, r) => {
+          if (
+            this[`DataAddValueInput${r}`].value.length > 0 &&
+            this[`DataAddNameInput${r}`].value.length > 0
+          ) {
+            if (this[`DataAddValueInputSecond${r}`]) {
+              if (this[`DataAddValueInputSecond${r}`].value.length > 0) {
+                NewData.data.push({
+                  name: this[`DataAddNameInput${r}`].value,
+                  data: [
+                    parseFloat(this[`DataAddValueInput${r}`].value),
+                    parseFloat(this[`DataAddValueInputSecond${r}`].value),
+                  ],
+                });
+              } else {
+                NewData.data.push({
+                  name: this[`DataAddNameInput${r}`].value,
+                  data: [parseFloat(this[`DataAddValueInput${r}`].value)],
+                });
+              }
+            } else {
+              NewData.data.push({
+                name: this[`DataAddNameInput${r}`].value,
+                data: [parseFloat(this[`DataAddValueInput${r}`].value)],
+              });
+            }
+          }
+        });
+        return NewData;
+      } else {
+        return a;
+      }
+    });
+    await this.props.SetStatistics(CurrentStatistics);
+
+    let NewAccounts = this.props.LocalStorageParsed.map((a) => {
+      if (a.Login === this.props.UserName) {
+        let NewUser = { ...a };
+        NewUser.Statistics = CurrentStatistics;
+        return NewUser;
+      } else {
+        return a;
+      }
+    });
+    window.localStorage.setItem("Accounts", JSON.stringify(NewAccounts));
+    await this.setState({
+      CurrentMonth: CurrentStatistics.find((a) => {
+        if (a.month === this.state.CurrentMonth.month) {
+          return a;
+        }
+      }),
+      EditMode: false,
+    });
+
+    this.DiagramFunc(this.state.CurrentMonth, window);
+  } else {
+    this.setState({ Errors: "Please Fill All Necessary Inputs" });
+    window.scrollTo(0, 0);
+  }
+};
+export const AddAnotherDataEntry = function () {
+  let NewState = [...this.state.TwoValues];
+  NewState.push(false);
+
+  this.setState({
+    DataEntryAmount: this.state.DataEntryAmount + 1,
+    TwoValues: NewState,
+  });
+};
+export const TwoValuesSetter = function (ind) {
+  let NewState = [...this.state.TwoValues];
+  NewState[ind] = !NewState[ind];
+  this.setState({ TwoValues: NewState });
+};
+export const DataAddValueContWidthSetter = function (a, b) {
+  if (!this.DataAddValueCont) {
+    this.DataAddValueCont = a;
+  }
+
+  let DataAddValueContWidth;
+  if (this.DataAddValueCont && !this.state.DataAddValueContWidth) {
+    DataAddValueContWidth = window
+      .getComputedStyle(this.DataAddValueCont)
+      .getPropertyValue("width");
+    this.setState({
+      DataAddValueContWidth: DataAddValueContWidth.slice(
+        0,
+        DataAddValueContWidth.length - 2
+      ),
+    });
+  }
+};
+
+export const ChangeCurrentMonthData = async function () {
+  let TwoValuesCopy = this.state.CurrentMonth.data.map((a) => {
+    if (a.data.length === 1) {
+      return false;
+    } else {
+      return true;
+    }
+  });
+
+  await this.setState({
+    ChartXYPositions: [],
+    InfoIndex: [],
+    CurrentData: null,
+    EditMode: true,
+    DataEntryAmount: this.state.CurrentMonth.data.length,
+    TwoValues: TwoValuesCopy,
+  });
+};
+export const DeleteEntireDataEntry = function (b) {
+  let TwoValuesCopy = [...this.state.TwoValues];
+  TwoValuesCopy.splice(b, 1);
+  let CurrentMonthCopy = { ...this.state.CurrentMonth };
+
+  CurrentMonthCopy.data.splice(b, 1);
+
+  this.setState({
+    DataEntryAmount: this.state.DataEntryAmount - 1,
+    TwoValues: TwoValuesCopy,
+    CurrentMonth: CurrentMonthCopy,
+  });
 };

@@ -12,10 +12,47 @@ body {
   background: #161823;
   min-height: 100vh;
   max-height: max-content;
+  position: relative;
+}
+
+.Title {
+  z-index: 1;
+  color: rgb(216, 216, 216);
+  font-size: 2.5rem;
+  font-weight: 500;
+  text-align: left;
+  width: 100%;
+  padding: 0 10% 0 5%;
+  box-sizing: border-box;
+  margin-top: 70%;
+}
+.TitleFeed:hover {
+  color: rgb(170, 242, 255) !important;
+}
+.LinearGrad {
+  top: 65%;
+  position: absolute;
+  height: 15rem;
+  width: 140%;
+  left: -20%;
+  transform: rotate(15deg);
+  background-image: linear-gradient(
+    -45deg,
+    rgba(80, 80, 252, 0.418),
+    rgba(250, 79, 79, 0.432)
+  );
+  z-index: 1;
 }
 @media only screen and (min-width: 500px) {
   body {
     padding-bottom: 4rem;
+  }
+  .Title {
+    padding: 0 25% 0 5%;
+  }
+  .LinearGrad {
+    width: 120%;
+    left: -10%;
   }
 }
 .FeedContainer {
@@ -29,6 +66,7 @@ body {
   background-repeat: no-repeat;
   background-size: 100% auto;
   overflow-x: hidden;
+  border-bottom: 4rem solid rgb(229, 229, 255);
 }
 
 .Upper {
@@ -36,32 +74,8 @@ body {
   position: relative;
   align-items: center;
 }
-
-.LinearGrad {
-  top: 65%;
-  position: absolute;
-  height: 15rem;
-  width: 120%;
-  left: -10%;
-  transform: rotate(15deg);
-  background-image: linear-gradient(
-    -45deg,
-    rgba(80, 80, 252, 0.418),
-    rgba(250, 79, 79, 0.432)
-  );
-  z-index: 1;
-}
-
-.Title {
-  z-index: 1;
-  color: rgb(216, 216, 216);
-  font-size: 60px;
-  font-weight: 500;
-  text-align: left;
-  width: 100%;
-  padding: 0 25% 0 5%;
-  box-sizing: border-box;
-  margin-top: 70%;
+.Upper:hover {
+  cursor: pointer;
 }
 
 .Lower {
@@ -82,6 +96,11 @@ body {
   padding-bottom: 5%;
   box-sizing: border-box;
   border-bottom: 1px solid rgb(119, 119, 119);
+  width: 100%;
+  overflow: hidden;
+  text-overflow: clip;
+  height: 7rem;
+  box-sizing: content-box;
 }
 
 .AuthorDate {
@@ -104,6 +123,12 @@ body {
   padding-top: 5%;
   align-items: center;
   padding-bottom: 5%;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.LikedBy {
+  display: flex;
+  align-items: center;
 }
 .LikeImages {
   height: 30px;
@@ -118,6 +143,9 @@ body {
   padding: 3px 5px;
   color: white;
   margin: 7px;
+  min-width: 1rem;
+  display: flex;
+  justify-content: center;
 }
 .LikedThis {
   color: rgb(145, 145, 145);

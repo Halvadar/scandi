@@ -19,17 +19,20 @@ export default class Navbar extends Component {
       this.setState({ url: a });
     };
   };
+  componentDidUpdate() {}
   render() {
     return (
       <div className="Navbar">
         {Images.map((img) => {
-          let Url = img.match(/((?<=media\/).*?(?=\.))/gs)[0];
+          let Url = img.match(/((?<=media).*?(?=\.))/gs)[0];
 
           return (
             <div
               style={{
                 background:
-                  this.state.url === Url ? "rgba(114, 114, 114) " : null,
+                  this.props.location.pathname === Url
+                    ? "rgba(114, 114, 114) "
+                    : null,
               }}
               className="NavItem"
               onClick={this.NavLink(Url)}

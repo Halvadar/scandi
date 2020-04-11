@@ -3,7 +3,7 @@ import "./Statistics.scss";
 import statistics from "../Navbar/statistics.svg";
 import Arrow from "./Arrow.svg";
 import { StatisticsData } from "../../Data";
-import { DiagramFunc, DiagramInfoOnClick, MonthDataSetter } from "./Functions";
+import * as Functions from "./Functions";
 import Plus from "./Plus.svg";
 import Minus from "./minus.svg";
 import PlusData from "./PlusData.svg";
@@ -18,16 +18,28 @@ export default class Statistics extends Component {
       CurrentMonth: null,
       ParsedStatistics: null,
       MonthsScrollPosition: 0,
-      CanvasHeightWidth: [200, 300],
+      CanvasHeightWidth: [200, 200],
       TwoValues: [false],
       DataAddValueContWidth: undefined,
       DataEntryAmount: 1,
+      EditMode: false,
+      MonthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      Errors: "",
     };
-    this.DiagramFunc = DiagramFunc.bind(this);
-    this.DiagramInfoOnClick = DiagramInfoOnClick.bind(this);
-    this.MonthDataSetter = MonthDataSetter.bind(this);
+    this.DiagramFunc = Functions.DiagramFunc.bind(this);
+    this.DiagramInfoOnClick = Functions.DiagramInfoOnClick.bind(this);
+    this.SubmitData = Functions.SubmitData.bind(this);
+    this.AddAnotherDataEntry = Functions.AddAnotherDataEntry.bind(this);
+    this.TwoValuesSetter = Functions.TwoValuesSetter.bind(this);
+    this.DataAddValueContWidthSetter = Functions.DataAddValueContWidthSetter.bind(
+      this
+    );
+    this.ChangeCurrentMonthData = Functions.ChangeCurrentMonthData.bind(this);
+    this.DeleteEntireDataEntry = Functions.DeleteEntireDataEntry.bind(this);
+    this.interval = undefined;
   }
   componentDidUpdate() {}
+
   componentDidMount() {
     if (window.screen.height > 500) {
       this.setState({ CanvasHeightWidth: [300, 450] });
@@ -36,92 +48,48 @@ export default class Statistics extends Component {
     if (this.props.LoggedIn) {
       this.DiagramFunc(this.props.Statistics[0], window);
     }
+
+    window.addEventListener("resize", this.ResizeFunc);
   }
-  AddAnotherDataEntry = () => {
-    let NewState = [...this.state.TwoValues];
-    NewState.push(false);
-    console.log(NewState);
-    this.setState({
-      DataEntryAmount: this.state.DataEntryAmount + 1,
-      TwoValues: NewState,
-    });
-  };
-  TwoValuesSetter = (ind) => {
-    let NewState = [...this.state.TwoValues];
-    NewState[ind] = !NewState[ind];
-    this.setState({ TwoValues: NewState });
-  };
-  DataAddValueContWidthSetter = (a, b) => {
-    if (!this.DataAddValueCont) {
-      this.DataAddValueCont = a;
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.ResizeFunc);
+  }
+  ResizeFunc = () => {
+    if (window.screen.height > 500) {
+      this.setState({ CanvasHeightWidth: [300, 450] });
+    } else {
+      this.setState({ CanvasHeightWidth: [200, 200] });
     }
-
-    let DataAddValueContWidth;
-    if (this.DataAddValueCont && !this.state.DataAddValueContWidth) {
-      DataAddValueContWidth = window
-        .getComputedStyle(this.DataAddValueCont)
-        .getPropertyValue("width");
-      this.setState({
-        DataAddValueContWidth: DataAddValueContWidth.slice(
-          0,
-          DataAddValueContWidth.length - 2
-        ),
-      });
-    }
-  };
-  SubmitData = async () => {
-    if (this.IncomeInput.value.length > 0 && this["DataAddNameInput0"].value) {
-      let CurrentStatistics = [...this.props.Statistics];
-      CurrentStatistics = CurrentStatistics.map((a) => {
-        if (a.month === this.state.CurrentMonth.month) {
-          let NewData = { ...a };
-          NewData.income = this["IncomeInput"].value;
-
-          this.state.TwoValues.forEach((e, r) => {
-            if (this[`DataAddValueInputSecond${r}`]) {
-              NewData.data.push({
-                name: this[`DataAddNameInput${r}`].value,
-                data: [
-                  parseFloat(this[`DataAddValueInput${r}`].value),
-                  parseFloat(this[`DataAddValueInputSecond${r}`].value),
-                ],
-              });
-            } else {
-              NewData.data.push({
-                name: this[`DataAddNameInput${r}`].value,
-                data: [parseFloat(this[`DataAddValueInput${r}`].value)],
-              });
-            }
-          });
-          return NewData;
-        } else {
-          return a;
-        }
-      });
-      await this.props.SetStatistics(CurrentStatistics);
-
-      let NewAccounts = this.props.LocalStorageParsed.map((a) => {
-        console.log(a.Login, this.props.UserName);
-        if (a.Login === this.props.UserName) {
-          console.log("Accounts Cahnged");
-          let NewUser = { ...a };
-          NewUser.Statistics = CurrentStatistics;
-          return NewUser;
-        } else {
-          return a;
-        }
-      });
-      window.localStorage.setItem("Accounts", JSON.stringify(NewAccounts));
-      await this.setState({
-        CurrentMonth: CurrentStatistics.find((a) => {
-          if (a.month === this.state.CurrentMonth.month) {
-            return a;
-          }
-        }),
-      });
+    this.state.CurrentMonth &&
       this.DiagramFunc(this.state.CurrentMonth, window);
-    }
   };
+  onHoverAnimation = (b) => {
+    return () => {
+      this.setState({ MonthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+      let AnimationArrCopy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      let AnimationArrcopy1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      console.log(AnimationArrcopy1);
+      let Variable = 0;
+      this.interval = setInterval(() => {
+        if (this.state.MonthAnimations[b] < 10) {
+          Variable++;
+          AnimationArrCopy[b] = Variable;
+          this.setState({ MonthAnimations: AnimationArrCopy });
+        } else {
+          clearInterval(this.interval);
+        }
+      }, 10);
+    };
+  };
+  OnLeave = (b) => {
+    return () => {
+      let AnimationArrCopy = [...this.state.MonthAnimations];
+      AnimationArrCopy[b] = 0;
+      this.setState({ MonthAnimations: AnimationArrCopy });
+      clearInterval(this.interval);
+    };
+  };
+
   render() {
     let CurrentData = this.state.CurrentData && [
       this.state.CurrentData.data.reduce((a, b) => a + b, 0),
@@ -129,6 +97,7 @@ export default class Statistics extends Component {
     ];
     let TotalSpent = 0;
     let Balance;
+    let DecimalPart;
     this.state.CurrentMonth &&
       this.state.CurrentMonth.data.forEach((a) => {
         a.data.forEach((b) => {
@@ -142,11 +111,19 @@ export default class Statistics extends Component {
     for (i = 0; i < this.state.DataEntryAmount; i++) {
       DataEntryAmount.push(0);
     }
+    DecimalPart = (Balance - Math.floor(Balance)).toFixed(2).toString();
 
     return (
       <div className="Statistic">
         <div className="GoBack_LogoCont">
-          <img src={Arrow} alt="GoBack" className="GoBack"></img>
+          <img
+            onClick={() => {
+              this.props.history.push("/feed");
+            }}
+            src={Arrow}
+            alt="GoBack"
+            className="GoBack"
+          ></img>
           <div className="Logo">
             <div>Statistics</div>
             <img src={statistics} alt="Statistics" className="LogoImg"></img>
@@ -179,12 +156,17 @@ export default class Statistics extends Component {
                         ref={(t) => (this[a] = t)}
                         style={{
                           background:
-                            this.state.CurrentMonth.month === a ? "gray" : null,
+                            this.state.CurrentMonth.month === a
+                              ? "rgb(53, 124, 255)"
+                              : null,
+                          bottom: this.state.MonthAnimations[b] + "px",
                         }}
                         onClick={() =>
                           this.DiagramFunc(this.props.Statistics[b], window)
                         }
                         className="Month"
+                        onMouseEnter={this.onHoverAnimation(b)}
+                        onMouseLeave={this.OnLeave(b)}
                       >
                         {a}
                       </div>
@@ -193,11 +175,15 @@ export default class Statistics extends Component {
                 </div>
               ) : null}
             </div>
-            {this.state.CurrentMonth &&
+            {!this.state.EditMode &&
+            this.state.CurrentMonth &&
             this.state.CurrentMonth.data.length > 0 ? (
               <React.Fragment>
                 <div className="ChangeDataEntries">
-                  <button onClick className="ChangeDataEntriesButton">
+                  <button
+                    onClick={this.ChangeCurrentMonthData}
+                    className="ChangeDataEntriesButton"
+                  >
                     Change Data
                   </button>
                 </div>
@@ -239,7 +225,10 @@ export default class Statistics extends Component {
                     : null}
                   <div className="CenterBalance">
                     <div className="BalanceNumber">
-                      ${this.state.CurrentMonth && Balance}
+                      ${this.state.CurrentMonth && Math.floor(Balance)}
+                      <div className="DecimalPortion">
+                        {Balance - Math.floor(Balance) !== 0 && DecimalPart}
+                      </div>
                     </div>
 
                     <div className="Balance">Balance</div>
@@ -266,7 +255,15 @@ export default class Statistics extends Component {
                 </div>
               </React.Fragment>
             ) : (
-              <div className="AddData">
+              <div
+                className="AddData"
+                onKeyPress={(a) => {
+                  if (a.key === "Enter") {
+                    this.SubmitData();
+                  }
+                }}
+              >
+                <div className="ErrorMessage">{this.state.Errors}</div>
                 <div className="IncomeInputCont">
                   <div style={{ margin: "1rem" }}>
                     Add Your Income For This Month
@@ -274,17 +271,46 @@ export default class Statistics extends Component {
                   <input
                     ref={(a) => (this.IncomeInput = a)}
                     className="IncomeInput"
+                    step="0.01"
                     type="number"
                     placeholder="$"
+                    Value={
+                      this.state.EditMode
+                        ? this.state.CurrentMonth.income
+                        : null
+                    }
                   ></input>
                 </div>
-                {DataEntryAmount.map((a, b) => {
+                <div className="AddYourSpendings">
+                  <div style={{ margin: "1rem" }}>Add Your Spendings</div>
+                </div>
+                {this.state.TwoValues.map((a, b) => {
+                  console.log(
+                    this.state.CurrentMonth && this.state.CurrentMonth.data[b]
+                  );
                   return (
                     <React.Fragment>
                       <div className="DataAddCont">
+                        {b !== 0 ? (
+                          <div
+                            onClick={() => {
+                              this.DeleteEntireDataEntry(b);
+                            }}
+                            className="DeleteDataEntry"
+                          >
+                            <img height="100%" width="100%" src={Minus}></img>
+                          </div>
+                        ) : null}
                         <div className="DataAddNameCont">
                           Name
                           <input
+                            Value={
+                              this.state.EditMode
+                                ? this.state.CurrentMonth.data[b]
+                                  ? this.state.CurrentMonth.data[b].name
+                                  : null
+                                : null
+                            }
                             className="DataAddNameInput"
                             ref={(a) => (this[`DataAddNameInput${b}`] = a)}
                           ></input>
@@ -306,6 +332,14 @@ export default class Statistics extends Component {
                                 ? this.state.DataAddValueContWidth / 2 + "px"
                                 : null,
                             }}
+                            Value={
+                              this.state.EditMode
+                                ? this.state.CurrentMonth.data[b]
+                                  ? this.state.CurrentMonth.data[b].data[0]
+                                  : null
+                                : null
+                            }
+                            step="0.01"
                             type="number"
                             placeholder="$"
                             className="DataAddNameInput DataAddValueInput "
@@ -320,6 +354,14 @@ export default class Statistics extends Component {
                                 maxWidth:
                                   this.state.DataAddValueContWidth / 2 + "px",
                               }}
+                              defaultValue={
+                                this.state.EditMode
+                                  ? this.state.CurrentMonth.data[b]
+                                    ? this.state.CurrentMonth.data[b].data[1]
+                                    : null
+                                  : null
+                              }
+                              step="0.01"
                               type="number"
                               placeholder="$"
                               className="DataAddNameInput DataAddValueInput "
