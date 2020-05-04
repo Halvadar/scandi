@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./Authentication.scss";
 import Arrow from "../Statistics/Arrow.svg";
-let NewAccStats = [
+const NewAccStats = [
   "January",
   "February",
   "March",
@@ -24,6 +24,7 @@ export default class Authentication extends Component {
       LoggedIn: false,
       ErrorMessage: "",
     };
+    this.AddNewOrLogin = this.AddNewOrLogin.bind(this);
   }
   componentWillUnmount() {
     this.AuthenticPage.removeEventListener("keypress", (a) => {
@@ -47,14 +48,16 @@ export default class Authentication extends Component {
     });
     this.setState({ ErrorMessage: "" });
   }
-  AddNewOrLogin = () => {
+  AddNewOrLogin() {
     if (this.Login.value.length > 0 && this.Password.value.length > 0) {
-      let FoundAccount = JSON.parse(window.localStorage.Accounts).find((a) => {
-        if (a.Login === this.Login.value) {
-          return a;
+      const FoundAccount = JSON.parse(window.localStorage.Accounts).find(
+        (a) => {
+          if (a.Login === this.Login.value) {
+            return a;
+          }
+          return null;
         }
-        return null;
-      });
+      );
       if (FoundAccount) {
         if (this.Password.value === FoundAccount.Password) {
           this.props.SetUser(
@@ -93,7 +96,7 @@ export default class Authentication extends Component {
         }
       }
     }
-  };
+  }
 
   render() {
     return (

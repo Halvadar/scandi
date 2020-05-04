@@ -1,0 +1,7 @@
+{
+  "extends": "react-app",
+  "rules": {
+    "prefer-const": "error",
+    "camelcase": "error"
+  }
+}

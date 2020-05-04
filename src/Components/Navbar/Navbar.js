@@ -12,19 +12,20 @@ export default class Navbar extends Component {
     this.state = {
       url: null,
     };
+    this.NavLink = this.NavLink.bind(this);
   }
-  NavLink = (a) => {
+  NavLink(a) {
     return () => {
       this.props.history.push(a);
       this.setState({ url: a });
     };
-  };
-  componentDidUpdate() {}
+  }
+
   render() {
     return (
       <div className="Navbar">
         {Images.map((img, ind) => {
-          let Url = img.match(/((?<=media).*?(?=\.))/gs)[0];
+          const Url = img.match(/((?<=media).*?(?=\.))/gs)[0];
 
           return (
             <div

@@ -27,6 +27,8 @@ export default class Statistics extends Component {
       EditMode: false,
       MonthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       Errors: "",
+      IncomeInputValue: "",
+      InputValues: [{ name: "", value1: "", value2: "" }],
     };
     this.DiagramFunc = Functions.DiagramFunc.bind(this);
     this.DiagramInfoOnClick = Functions.DiagramInfoOnClick.bind(this);
@@ -38,9 +40,12 @@ export default class Statistics extends Component {
     );
     this.ChangeCurrentMonthData = Functions.ChangeCurrentMonthData.bind(this);
     this.DeleteEntireDataEntry = Functions.DeleteEntireDataEntry.bind(this);
+    this.ResizeFunc = this.ResizeFunc.bind(this);
+    this.onHoverAnimation = this.onHoverAnimation.bind(this);
+    this.OnLeave = this.OnLeave.bind(this);
+    this.InputValueSetter = this.InputValueSetter.bind(this);
     this.interval = undefined;
   }
-  componentDidUpdate() {}
 
   componentDidMount() {
     if (window.screen.width > 500) {
@@ -56,7 +61,7 @@ export default class Statistics extends Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.ResizeFunc);
   }
-  ResizeFunc = () => {
+  ResizeFunc() {
     if (window.screen.width > 500) {
       this.setState({ CanvasHeightWidth: [300, 450] });
     } else {
@@ -64,11 +69,11 @@ export default class Statistics extends Component {
     }
     this.state.CurrentMonth &&
       this.DiagramFunc(this.state.CurrentMonth, window);
-  };
-  onHoverAnimation = (b) => {
+  }
+  onHoverAnimation(b) {
     return () => {
       this.setState({ MonthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
-      let AnimationArrCopy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      const AnimationArrCopy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
       let Variable = 0;
       this.interval = setInterval(() => {
@@ -81,18 +86,51 @@ export default class Statistics extends Component {
         }
       }, 10);
     };
-  };
-  OnLeave = (b) => {
+  }
+  OnLeave(b) {
     return () => {
-      let AnimationArrCopy = [...this.state.MonthAnimations];
+      const AnimationArrCopy = [...this.state.MonthAnimations];
       AnimationArrCopy[b] = 0;
       this.setState({ MonthAnimations: AnimationArrCopy });
       clearInterval(this.interval);
     };
-  };
+  }
 
+  InputValueSetter(type, index) {
+    return () => {
+      this.setState((PrevState) => {
+        if (type === "Income") {
+          return { IncomeInputValue: this.IncomeInput.value };
+        }
+        const NewInputValues = PrevState.InputValues.map(
+          (item, ObjectIndex) => {
+            if (index === ObjectIndex) {
+              let TypeValue;
+              if (type === "name") {
+                TypeValue = { name: this[`DataAddNameInput${index}`].value };
+                console.log(this.state.InputValues[index].name);
+              } else if (type === "value1") {
+                TypeValue = { value1: this[`DataAddValueInput${index}`].value };
+              } else if (type === "value2") {
+                TypeValue = {
+                  value2: this[`DataAddValueInputSecond${index}`].value,
+                };
+              }
+              const ThisInputsCopy = {
+                ...PrevState.InputValues[index],
+                ...TypeValue,
+              };
+              return ThisInputsCopy;
+            }
+            return item;
+          }
+        );
+        return { InputValues: NewInputValues };
+      });
+    };
+  }
   render() {
-    let CurrentData = this.state.CurrentData && [
+    const CurrentData = this.state.CurrentData && [
       this.state.CurrentData.data.reduce((a, b) => a + b, 0),
       this.state.CurrentData.name,
     ];
@@ -104,6 +142,7 @@ export default class Statistics extends Component {
     let IncomeDecimal;
     let ExpenseFloored;
     let ExpenseDecimal;
+
     this.state.CurrentMonth &&
       this.state.CurrentMonth.data.forEach((a) => {
         a.data.forEach((b) => {
@@ -112,11 +151,7 @@ export default class Statistics extends Component {
       });
     if (this.state.CurrentMonth && this.state.CurrentMonth.income) {
       Balance = this.state.CurrentMonth.income - TotalSpent;
-      let DataEntryAmount = [];
-      let i;
-      for (i = 0; i < this.state.DataEntryAmount; i++) {
-        DataEntryAmount.push(0);
-      }
+
       BalanceFloored = Balance > 0 ? Math.floor(Balance) : Math.ceil(Balance);
       DecimalPart = (Balance > 0
         ? Balance - BalanceFloored
@@ -314,12 +349,9 @@ export default class Statistics extends Component {
                     className="IncomeInput"
                     step="0.01"
                     type="number"
+                    onChange={this.InputValueSetter("Income")}
                     placeholder="$"
-                    Value={
-                      this.state.EditMode
-                        ? this.state.CurrentMonth.income
-                        : null
-                    }
+                    value={this.state.IncomeInputValue}
                   ></input>
                 </div>
                 <div className="AddYourSpendings">
@@ -347,13 +379,8 @@ export default class Statistics extends Component {
                         <div className="DataAddNameCont">
                           Name
                           <input
-                            Value={
-                              this.state.EditMode
-                                ? this.state.CurrentMonth.data[b]
-                                  ? this.state.CurrentMonth.data[b].name
-                                  : null
-                                : null
-                            }
+                            value={this.state.InputValues[b].name}
+                            onChange={this.InputValueSetter("name", b)}
                             className="DataAddNameInput"
                             ref={(a) => (this[`DataAddNameInput${b}`] = a)}
                           ></input>
@@ -375,13 +402,8 @@ export default class Statistics extends Component {
                                 ? this.state.DataAddValueContWidth / 2 + "px"
                                 : null,
                             }}
-                            Value={
-                              this.state.EditMode
-                                ? this.state.CurrentMonth.data[b]
-                                  ? this.state.CurrentMonth.data[b].data[0]
-                                  : null
-                                : null
-                            }
+                            value={this.state.InputValues[b].value1}
+                            onChange={this.InputValueSetter("value1", b)}
                             step="0.01"
                             type="number"
                             placeholder="$"
@@ -397,13 +419,8 @@ export default class Statistics extends Component {
                                 maxWidth:
                                   this.state.DataAddValueContWidth / 2 + "px",
                               }}
-                              defaultValue={
-                                this.state.EditMode
-                                  ? this.state.CurrentMonth.data[b]
-                                    ? this.state.CurrentMonth.data[b].data[1]
-                                    : null
-                                  : null
-                              }
+                              value={this.state.InputValues[b].value2}
+                              onChange={this.InputValueSetter("value2", b)}
                               step="0.01"
                               type="number"
                               placeholder="$"

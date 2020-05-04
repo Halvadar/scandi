@@ -11,7 +11,7 @@ export default class Test extends Component {
     };
   }
   componentDidMount() {
-    let DataAddValueContWidth = window
+    const DataAddValueContWidth = window
       .getComputedStyle(this.DataAddValueCont)
       .getPropertyValue("width");
     this.setState({
@@ -69,6 +69,7 @@ export default class Test extends Component {
               ) : null}
               <div className="AddAnotherValue" onClick={this.TwoValuesSetter}>
                 <img
+                  alt="111"
                   src={this.state.TwoValues ? Minus : Plus}
                   height="100%"
                 ></img>

@@ -12,17 +12,21 @@ import background1 from "./Background1.jpg";
 import background2 from "./Background2.jpg";
 import Plus from "../Statistics/PlusData.svg";
 
-let backgrounds = [background0, background1, background2];
-let images = [image0, image1, image2, image3, image4, image5];
+const backgrounds = [background0, background1, background2];
+const images = [image0, image1, image2, image3, image4, image5];
 export class Feed extends Component {
+  constructor() {
+    super();
+    this.AddYourPost = this.AddYourPost.bind(this);
+  }
   goToPost = (arg) => {
     return () => {
       this.props.history.push(arg);
     };
   };
-  AddYourPost = () => {
+  AddYourPost() {
     this.props.history.push("/AddNewPost");
-  };
+  }
 
   render() {
     return (

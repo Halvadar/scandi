@@ -13,8 +13,8 @@ import Arrow from "../Statistics/Arrow.svg";
 import like from "./like.svg";
 import dislike from "./dislike.svg";
 
-let backgrounds = [background0, background1, background2];
-let images = [image0, image1, image2, image3, image4, image5];
+const backgrounds = [background0, background1, background2];
+const images = [image0, image1, image2, image3, image4, image5];
 
 export default class Post extends Component {
   constructor(props) {
@@ -24,6 +24,8 @@ export default class Post extends Component {
       post: this.props.FeedItems[parseInt(this.props.match.params.id)],
       postID: parseInt(this.props.match.params.id),
     };
+    this.SubmitComment = this.SubmitComment.bind(this);
+    this.LikeDislike = this.LikeDislike.bind(this);
   }
 
   componentDidMount() {
@@ -34,52 +36,76 @@ export default class Post extends Component {
         }
       });
   }
-  SubmitComment = () => {
-    let FeedItemsCopy = [...this.props.FeedItems];
-
-    FeedItemsCopy[this.state.postID].comments.push({
-      comment: this.CommentRef.value,
-      author: this.props.UserName,
+  async SubmitComment() {
+    const FeedItemsCopy = this.props.FeedItems.map((item, index) => {
+      if (index === this.state.postID) {
+        const NewComments = [
+          ...item.comments,
+          { comment: this.CommentRef.value, author: this.props.UserName },
+        ];
+        const NewItem = { ...item, comments: NewComments };
+        return NewItem;
+      }
+      return item;
     });
     if (this.CommentRef.value.length > 0) {
       localStorage.setItem("Feed", JSON.stringify(FeedItemsCopy));
       this.props.SetFeedData(FeedItemsCopy);
+      this.setState({ post: FeedItemsCopy[this.state.postID] });
       this.CommentRef.value = "";
       this.FirstCommentRef.scrollIntoView();
       this.CommentRef.blur();
+      console.log(2);
     }
-  };
-  LikeDislike = (a) => {
+  }
+  LikeDislike(a) {
     return () => {
-      let FeedItemsCopy = [...this.props.FeedItems];
+      const PostLikedCopy = this.props.FeedItems[this.state.postID].likedby.map(
+        (item, index) => {
+          const NewItem = { ...item };
+          return NewItem;
+        }
+      );
+      let NewPostLikedCopy;
 
       if (this.props.LoggedIn) {
-        let FoundLike = FeedItemsCopy[this.state.postID].likedby.find(
-          (like, index) => {
-            if (like.name === this.props.UserName) {
-              FeedItemsCopy[this.state.postID].likedby[index].likestatus = a;
-              return like;
-            }
-            return;
+        const FoundLike = PostLikedCopy.find((like, index) => {
+          if (like.name === this.props.UserName) {
+            PostLikedCopy[index].likestatus = a;
+            return like;
           }
-        );
+          return null;
+        });
         if (!FoundLike) {
-          FeedItemsCopy[this.state.postID].likedby.push({
-            image: this.props.Image,
-            name: this.props.UserName,
-            likestatus: a,
-          });
+          NewPostLikedCopy = [
+            ...PostLikedCopy,
+            {
+              image: this.props.Image,
+              name: this.props.UserName,
+              likestatus: a,
+            },
+          ];
+        } else {
+          NewPostLikedCopy = PostLikedCopy;
         }
+        const FeedItemsCopy = this.props.FeedItems.map((item, index) => {
+          if (index === this.state.postID) {
+            const NewItem = { ...item, likedby: NewPostLikedCopy };
+            return NewItem;
+          }
+          return item;
+        });
         localStorage.setItem("Feed", JSON.stringify(FeedItemsCopy));
         this.props.SetFeedData(FeedItemsCopy);
+        this.setState({ post: FeedItemsCopy[this.state.postID] });
       }
     };
-  };
+  }
 
   render() {
-    let postID = this.state.postID;
-    let post = this.state.post;
-    let reversedcomments = [...post.comments].reverse();
+    const postID = this.state.postID;
+    const post = this.state.post;
+    const reversedcomments = [...post.comments].reverse();
 
     let likes = 0;
     post.likedby.forEach((a) => {

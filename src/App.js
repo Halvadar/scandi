@@ -25,29 +25,34 @@ class App extends Component {
       ShowUserName: false,
       DistanceFromRight: null,
     };
+    this.SetUser = this.SetUser.bind(this);
+    this.LogOut = this.LogOut.bind(this);
+    this.SetStatistics = this.SetStatistics.bind(this);
+    this.SetLocalStorageParsed = this.SetLocalStorageParsed.bind(this);
+    this.SetFeedData = this.SetFeedData.bind(this);
   }
-  SetUser = (user, data, image) => {
+  SetUser(user, data, image) {
     this.setState({
       LoggedIn: true,
       UserName: user,
       Statistics: data,
       Image: image,
     });
-  };
+  }
 
-  LogOut = () => {
+  LogOut() {
     this.setState({ LoggedIn: false, UserName: null, Statistics: null });
-  };
-  SetStatistics = async (stats) => {
+  }
+  async SetStatistics(stats) {
     this.setState({ Statistics: stats });
-  };
-  SetLocalStorageParsed = (a) => {
+  }
+  SetLocalStorageParsed(a) {
     this.setState({ LocalStorageParsed: a });
-  };
-  SetFeedData = (a) => {
-    this.setState({ FeedData: a });
-  };
-  componentDidUpdate() {}
+  }
+  async SetFeedData(a) {
+    await this.setState({ FeedData: a });
+    console.log(1);
+  }
 
   componentDidMount() {
     this.setState({
