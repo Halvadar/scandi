@@ -46,12 +46,11 @@ class App extends Component {
   async SetStatistics(stats) {
     this.setState({ Statistics: stats });
   }
-  SetLocalStorageParsed(a) {
-    this.setState({ LocalStorageParsed: a });
+  SetLocalStorageParsed(LocalStorageParsedValue) {
+    this.setState({ LocalStorageParsed: LocalStorageParsedValue });
   }
-  async SetFeedData(a) {
-    await this.setState({ FeedData: a });
-    console.log(1);
+  async SetFeedData(FeedDataValue) {
+    await this.setState({ FeedData: FeedDataValue });
   }
 
   componentDidMount() {

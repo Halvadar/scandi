@@ -30,23 +30,23 @@ export default class Post extends Component {
 
   componentDidMount() {
     this.props.LoggedIn &&
-      this.CommentRef.addEventListener("keypress", (a) => {
-        if (a.key === "Enter") {
+      this.CommentRef.addEventListener("keypress", (keypress) => {
+        if (keypress.key === "Enter") {
           this.SubmitComment();
         }
       });
   }
   async SubmitComment() {
-    const FeedItemsCopy = this.props.FeedItems.map((item, index) => {
-      if (index === this.state.postID) {
+    const FeedItemsCopy = this.props.FeedItems.map((FeedItem, Index) => {
+      if (Index === this.state.postID) {
         const NewComments = [
-          ...item.comments,
+          ...FeedItem.comments,
           { comment: this.CommentRef.value, author: this.props.UserName },
         ];
-        const NewItem = { ...item, comments: NewComments };
+        const NewItem = { ...FeedItem, comments: NewComments };
         return NewItem;
       }
-      return item;
+      return FeedItem;
     });
     if (this.CommentRef.value.length > 0) {
       localStorage.setItem("Feed", JSON.stringify(FeedItemsCopy));
@@ -55,23 +55,22 @@ export default class Post extends Component {
       this.CommentRef.value = "";
       this.FirstCommentRef.scrollIntoView();
       this.CommentRef.blur();
-      console.log(2);
     }
   }
-  LikeDislike(a) {
+  LikeDislike(LikeStatus) {
     return () => {
       const PostLikedCopy = this.props.FeedItems[this.state.postID].likedby.map(
-        (item, index) => {
-          const NewItem = { ...item };
+        (Item, Index) => {
+          const NewItem = { ...Item };
           return NewItem;
         }
       );
       let NewPostLikedCopy;
 
       if (this.props.LoggedIn) {
-        const FoundLike = PostLikedCopy.find((like, index) => {
+        const FoundLike = PostLikedCopy.find((like, Index) => {
           if (like.name === this.props.UserName) {
-            PostLikedCopy[index].likestatus = a;
+            PostLikedCopy[Index].likestatus = LikeStatus;
             return like;
           }
           return null;
@@ -82,18 +81,18 @@ export default class Post extends Component {
             {
               image: this.props.Image,
               name: this.props.UserName,
-              likestatus: a,
+              likestatus: LikeStatus,
             },
           ];
         } else {
           NewPostLikedCopy = PostLikedCopy;
         }
-        const FeedItemsCopy = this.props.FeedItems.map((item, index) => {
-          if (index === this.state.postID) {
-            const NewItem = { ...item, likedby: NewPostLikedCopy };
+        const FeedItemsCopy = this.props.FeedItems.map((Item, Index) => {
+          if (Index === this.state.postID) {
+            const NewItem = { ...Item, likedby: NewPostLikedCopy };
             return NewItem;
           }
-          return item;
+          return Item;
         });
         localStorage.setItem("Feed", JSON.stringify(FeedItemsCopy));
         this.props.SetFeedData(FeedItemsCopy);
@@ -107,14 +106,9 @@ export default class Post extends Component {
     const post = this.state.post;
     const reversedcomments = [...post.comments].reverse();
 
-    let likes = 0;
-    post.likedby.forEach((a) => {
-      if (a.likestatus === "like") {
-        likes++;
-      } else {
-        likes -= 1;
-      }
-    });
+    const likes = post.likedby.reduce((Sum, like) => {
+      return like.likestatus === "like" ? Sum + 1 : (Sum -= 1);
+    }, 0);
 
     return (
       <React.Fragment>
@@ -169,13 +163,13 @@ export default class Post extends Component {
                         ></img>
                       </React.Fragment>
                     ) : (
-                      post.likedby.map((a, b) => {
+                      post.likedby.map((LikedBy, Index) => {
                         return (
                           <img
-                            key={b}
+                            key={Index}
                             className="LikeImages"
                             alt="LikedBy"
-                            src={a.image}
+                            src={LikedBy.image}
                           ></img>
                         );
                       })
@@ -240,12 +234,12 @@ export default class Post extends Component {
                     You need to Log In to be able to Comment
                   </div>
                 )}
-                {reversedcomments.map((a, b) => {
+                {reversedcomments.map((Comment, Index) => {
                   return (
                     <div
-                      key={b}
+                      key={Index}
                       ref={
-                        b === 0
+                        Index === 0
                           ? (r) => {
                               this.FirstCommentRef = r;
                             }
@@ -253,8 +247,8 @@ export default class Post extends Component {
                       }
                       className="IndividualComment"
                     >
-                      <div>{a.comment}</div>
-                      <div className="CommentAuthor">{a.author}</div>
+                      <div>{Comment.comment}</div>
+                      <div className="CommentAuthor">{Comment.author}</div>
                     </div>
                   );
                 })}

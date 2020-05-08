@@ -40,10 +40,10 @@ export class Feed extends Component {
           ></img>
           <div> Add a New Post</div>
         </div>
-        {this.props.FeedItems.map((a, b) => {
+        {this.props.FeedItems.map((FeedItem, FeedItemIndex) => {
           let likes = 0;
-          a.likedby.forEach((a) => {
-            if (a.likestatus === "like") {
+          FeedItem.likedby.forEach((LikeDislike) => {
+            if (LikeDislike.likestatus === "like") {
               likes++;
             } else {
               likes -= 1;
@@ -51,52 +51,60 @@ export class Feed extends Component {
           });
           return (
             <div
-              key={b}
+              key={FeedItemIndex}
               className="FeedItem"
               style={{
                 backgroundImage: `url(${
-                  b < 3 ? backgrounds[b] : a.background
+                  FeedItemIndex < 3
+                    ? backgrounds[FeedItemIndex]
+                    : FeedItem.background
                 })`,
               }}
             >
               <div
                 title="Go To Post"
                 className="Upper"
-                onClick={this.goToPost(`/post/${b}`)}
+                onClick={this.goToPost(`/post/${FeedItemIndex}`)}
               >
                 <div className="LinearGrad"></div>
-                <div className="Title TitleFeed">{a.title}</div>
+                <div className="Title TitleFeed">{FeedItem.title}</div>
               </div>
               <div className="Lower">
-                <div className="Preview">{a.post}</div>
+                <div className="Preview">{FeedItem.post}</div>
                 <div className="AuthorDate">
                   <div className="Author">
-                    By <span className="Name">{a.author}</span>
+                    By <span className="Name">{FeedItem.author}</span>
                   </div>
-                  <div className="Date">{a.date}</div>
+                  <div className="Date">{FeedItem.date}</div>
                 </div>
                 <div style={{ justifyContent: "flex-start" }} className="Likes">
-                  {b < 3 ? (
+                  {FeedItemIndex < 3 ? (
                     <React.Fragment>
                       <img
                         className="LikeImages"
                         alt="LikedBy"
-                        src={b < 3 ? images[2 * b] : null}
+                        src={
+                          FeedItemIndex < 3 ? images[2 * FeedItemIndex] : null
+                        }
                       ></img>
                       <img
                         className="LikeImages"
                         alt="LikedBy"
-                        src={b < 3 ? images[2 * b + 1] : null}
+                        src={
+                          FeedItemIndex < 3
+                            ? images[2 * FeedItemIndex + 1]
+                            : null
+                        }
                       ></img>
                     </React.Fragment>
                   ) : (
-                    a.likedby.map((a, b) => {
+                    FeedItem.likedby.map((LikeDislike, LikeDislikeIndex) => {
                       return (
                         <img
-                          key={b}
+                          key={LikeDislikeIndex}
                           className="LikeImages"
                           alt="LikedBy"
-                          src={a.image}
+                          src={LikeDislike.image}
                         ></img>
                       );
                     })

@@ -70,16 +70,16 @@ export default class Statistics extends Component {
     this.state.CurrentMonth &&
       this.DiagramFunc(this.state.CurrentMonth, window);
   }
-  onHoverAnimation(b) {
+  onHoverAnimation(Index) {
     return () => {
       this.setState({ MonthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
       const AnimationArrCopy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
       let Variable = 0;
       this.interval = setInterval(() => {
-        if (this.state.MonthAnimations[b] < 10) {
+        if (this.state.MonthAnimations[Index] < 10) {
           Variable++;
-          AnimationArrCopy[b] = Variable;
+          AnimationArrCopy[Index] = Variable;
           this.setState({ MonthAnimations: AnimationArrCopy });
         } else {
           clearInterval(this.interval);
@@ -87,42 +87,42 @@ export default class Statistics extends Component {
       }, 10);
     };
   }
-  OnLeave(b) {
+  OnLeave(Index) {
     return () => {
       const AnimationArrCopy = [...this.state.MonthAnimations];
-      AnimationArrCopy[b] = 0;
+      AnimationArrCopy[Index] = 0;
       this.setState({ MonthAnimations: AnimationArrCopy });
       clearInterval(this.interval);
     };
   }
 
-  InputValueSetter(type, index) {
+  InputValueSetter(Type, Index) {
     return () => {
       this.setState((PrevState) => {
-        if (type === "Income") {
+        if (Type === "Income") {
           return { IncomeInputValue: this.IncomeInput.value };
         }
         const NewInputValues = PrevState.InputValues.map(
-          (item, ObjectIndex) => {
-            if (index === ObjectIndex) {
+          (Item, ObjectIndex) => {
+            if (Index === ObjectIndex) {
               let TypeValue;
-              if (type === "name") {
-                TypeValue = { name: this[`DataAddNameInput${index}`].value };
-                console.log(this.state.InputValues[index].name);
-              } else if (type === "value1") {
-                TypeValue = { value1: this[`DataAddValueInput${index}`].value };
-              } else if (type === "value2") {
+              if (Type === "name") {
+                TypeValue = { name: this[`DataAddNameInput${Index}`].value };
+                console.log(this.state.InputValues[Index].name);
+              } else if (Type === "value1") {
+                TypeValue = { value1: this[`DataAddValueInput${Index}`].value };
+              } else if (Type === "value2") {
                 TypeValue = {
-                  value2: this[`DataAddValueInputSecond${index}`].value,
+                  value2: this[`DataAddValueInputSecond${Index}`].value,
                 };
               }
               const ThisInputsCopy = {
-                ...PrevState.InputValues[index],
+                ...PrevState.InputValues[Index],
                 ...TypeValue,
               };
               return ThisInputsCopy;
             }
-            return item;
+            return Item;
           }
         );
         return { InputValues: NewInputValues };
@@ -131,7 +131,10 @@ export default class Statistics extends Component {
   }
   render() {
     const CurrentData = this.state.CurrentData && [
-      this.state.CurrentData.data.reduce((a, b) => a + b, 0),
+      this.state.CurrentData.data.reduce(
+        (Accumulator, CurrentValue) => Accumulator + CurrentValue,
+        0
+      ),
       this.state.CurrentData.name,
     ];
     let TotalSpent = 0;
@@ -144,9 +147,9 @@ export default class Statistics extends Component {
     let ExpenseDecimal;
 
     this.state.CurrentMonth &&
-      this.state.CurrentMonth.data.forEach((a) => {
-        a.data.forEach((b) => {
-          TotalSpent = TotalSpent + b;
+      this.state.CurrentMonth.data.forEach((DataObject) => {
+        DataObject.data.forEach((DataValue) => {
+          TotalSpent = TotalSpent + DataValue;
         });
       });
     if (this.state.CurrentMonth && this.state.CurrentMonth.income) {
@@ -216,26 +219,26 @@ export default class Statistics extends Component {
                     "October",
                     "November",
                     "December",
-                  ].map((a, b) => {
+                  ].map((MonthName, Index) => {
                     return (
                       <div
-                        key={b}
-                        ref={(t) => (this[a] = t)}
+                        key={Index}
+                        ref={(t) => (this[MonthName] = t)}
                         style={{
                           background:
-                            this.state.CurrentMonth.month === a
+                            this.state.CurrentMonth.month === MonthName
                               ? "rgb(53, 124, 255)"
                               : null,
-                          bottom: this.state.MonthAnimations[b] + "px",
+                          bottom: this.state.MonthAnimations[Index] + "px",
                         }}
                         onClick={() =>
-                          this.DiagramFunc(this.props.Statistics[b], window)
+                          this.DiagramFunc(this.props.Statistics[Index], window)
                         }
                         className="Month"
-                        onMouseEnter={this.onHoverAnimation(b)}
-                        onMouseLeave={this.OnLeave(b)}
+                        onMouseEnter={this.onHoverAnimation(Index)}
+                        onMouseLeave={this.OnLeave(Index)}
                       >
-                        {a}
+                        {MonthName}
                       </div>
                     );
                   })}
@@ -263,27 +266,27 @@ export default class Statistics extends Component {
                   ></canvas>
                   {this.state.ChartXYPositions.length > 0 &&
                   this.state.CurrentMonth.data
-                    ? this.state.ChartXYPositions.map((val, ind) => {
+                    ? this.state.ChartXYPositions.map((Value, Index) => {
                         return (
                           <div
-                            key={ind}
+                            key={Index}
                             onClick={this.DiagramInfoOnClick(
-                              ind,
+                              Index,
                               this.state.CurrentMonth.data
                             )}
                             className="DiagramClickInfo"
                             style={{
                               left:
-                                this.state.ChartXYPositions[ind]
+                                this.state.ChartXYPositions[Index]
                                   .LinearGradXEnd -
                                 7.5 +
                                 "px",
                               top:
-                                this.state.ChartXYPositions[ind]
+                                this.state.ChartXYPositions[Index]
                                   .LinearGradYEnd -
                                 7.5 +
                                 "px",
-                              background: this.state.InfoIndex[ind],
+                              background: this.state.InfoIndex[Index],
                             }}
                           >
                             <div className="DiagramClickInside"></div>
@@ -333,8 +336,8 @@ export default class Statistics extends Component {
             ) : (
               <div
                 className="AddData"
-                onKeyPress={(a) => {
-                  if (a.key === "Enter") {
+                onKeyPress={(KeyPress) => {
+                  if (KeyPress.key === "Enter") {
                     this.SubmitData();
                   }
                 }}
@@ -357,14 +360,14 @@ export default class Statistics extends Component {
                 <div className="AddYourSpendings">
                   <div style={{ margin: "1rem" }}>Add Your Spendings</div>
                 </div>
-                {this.state.TwoValues.map((a, b) => {
+                {this.state.TwoValues.map((Value, Index) => {
                   return (
                     <React.Fragment>
-                      <div key={b} className="DataAddCont">
-                        {b !== 0 ? (
+                      <div key={Index} className="DataAddCont">
+                        {Index !== 0 ? (
                           <div
                             onClick={() => {
-                              this.DeleteEntireDataEntry(b);
+                              this.DeleteEntireDataEntry(Index);
                             }}
                             className="DeleteDataEntry"
                           >
@@ -379,48 +382,48 @@ export default class Statistics extends Component {
                         <div className="DataAddNameCont">
                           Name
                           <input
-                            value={this.state.InputValues[b].name}
-                            onChange={this.InputValueSetter("name", b)}
+                            value={this.state.InputValues[Index].name}
+                            onChange={this.InputValueSetter("name", Index)}
                             className="DataAddNameInput"
-                            ref={(a) => (this[`DataAddNameInput${b}`] = a)}
+                            ref={(a) => (this[`DataAddNameInput${Index}`] = a)}
                           ></input>
                         </div>
                         <div
                           className="DataAddNameCont DataAddValueCont"
                           ref={(a) => {
-                            if (b === 0) {
-                              this.DataAddValueContWidthSetter(a, b);
+                            if (Index === 0) {
+                              this.DataAddValueContWidthSetter(a, Index);
                             }
                           }}
                         >
                           Spent
                           <input
-                            ref={(a) => (this[`DataAddValueInput${b}`] = a)}
+                            ref={(a) => (this[`DataAddValueInput${Index}`] = a)}
                             style={{
                               Width: "100%",
-                              maxWidth: this.state.TwoValues[b]
+                              maxWidth: this.state.TwoValues[Index]
                                 ? this.state.DataAddValueContWidth / 2 + "px"
                                 : null,
                             }}
-                            value={this.state.InputValues[b].value1}
-                            onChange={this.InputValueSetter("value1", b)}
+                            value={this.state.InputValues[Index].value1}
+                            onChange={this.InputValueSetter("value1", Index)}
                             step="0.01"
                             type="number"
                             placeholder="$"
                             className="DataAddNameInput DataAddValueInput "
                           ></input>
-                          {this.state.TwoValues[b] ? (
+                          {this.state.TwoValues[Index] ? (
                             <input
                               ref={(a) =>
-                                (this[`DataAddValueInputSecond${b}`] = a)
+                                (this[`DataAddValueInputSecond${Index}`] = a)
                               }
                               style={{
                                 Width: "100%",
                                 maxWidth:
                                   this.state.DataAddValueContWidth / 2 + "px",
                               }}
-                              value={this.state.InputValues[b].value2}
-                              onChange={this.InputValueSetter("value2", b)}
+                              value={this.state.InputValues[Index].value2}
+                              onChange={this.InputValueSetter("value2", Index)}
                               step="0.01"
                               type="number"
                               placeholder="$"
@@ -430,12 +433,12 @@ export default class Statistics extends Component {
                           <div
                             className="AddAnotherValue"
                             onClick={() => {
-                              this.TwoValuesSetter(b);
+                              this.TwoValuesSetter(Index);
                             }}
                           >
                             <img
                               alt=""
-                              src={this.state.TwoValues[b] ? Minus : Plus}
+                              src={this.state.TwoValues[Index] ? Minus : Plus}
                               height="100%"
                             ></img>
                           </div>

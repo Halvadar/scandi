@@ -10,8 +10,8 @@ export default class AddNewPost extends Component {
     this.SubmitNewPost = this.SubmitNewPost.bind(this);
   }
   componentDidMount() {
-    this.ImageRef.addEventListener("keypress", (a) => {
-      if (a.key === "Enter") {
+    this.ImageRef.addEventListener("keypress", (keypress) => {
+      if (keypress.key === "Enter") {
         this.SubmitNewPost();
       }
     });

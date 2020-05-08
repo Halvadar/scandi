@@ -14,8 +14,8 @@ const NewAccStats = [
   "October",
   "November",
   "December",
-].map((a) => {
-  return { month: a, income: undefined, data: [] };
+].map((MonthName) => {
+  return { month: MonthName, income: undefined, data: [] };
 });
 export default class Authentication extends Component {
   constructor() {
@@ -27,8 +27,8 @@ export default class Authentication extends Component {
     this.AddNewOrLogin = this.AddNewOrLogin.bind(this);
   }
   componentWillUnmount() {
-    this.AuthenticPage.removeEventListener("keypress", (a) => {
-      if (a.key === "Enter") {
+    this.AuthenticPage.removeEventListener("keypress", (keypress) => {
+      if (keypress.key === "Enter") {
         this.AddNewOrLogin();
       }
     });
@@ -41,8 +41,8 @@ export default class Authentication extends Component {
     if (!this.props.LoggedIn) {
       this.Login.focus();
     }
-    this.AuthenticPage.addEventListener("keypress", (a) => {
-      if (a.key === "Enter") {
+    this.AuthenticPage.addEventListener("keypress", (keypress) => {
+      if (keypress.key === "Enter") {
         this.AddNewOrLogin();
       }
     });
@@ -51,9 +51,9 @@ export default class Authentication extends Component {
   AddNewOrLogin() {
     if (this.Login.value.length > 0 && this.Password.value.length > 0) {
       const FoundAccount = JSON.parse(window.localStorage.Accounts).find(
-        (a) => {
-          if (a.Login === this.Login.value) {
-            return a;
+        (Account) => {
+          if (Account.Login === this.Login.value) {
+            return Account;
           }
           return null;
         }

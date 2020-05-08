@@ -14,10 +14,10 @@ export default class Navbar extends Component {
     };
     this.NavLink = this.NavLink.bind(this);
   }
-  NavLink(a) {
+  NavLink(Url) {
     return () => {
-      this.props.history.push(a);
-      this.setState({ url: a });
+      this.props.history.push(Url);
+      this.setState({ url: Url });
     };
   }
 

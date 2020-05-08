@@ -61,13 +61,12 @@ export const DiagramFunc = async function (Month, wind) {
   if (this.state.CurrentMonth.data.length === 0) {
     return;
   }
-  let dataSum = 0;
+
   const data = Month.data;
-  data.forEach((a) => {
-    a.data.forEach((b) => {
-      dataSum = dataSum + b;
-    });
-  });
+  const DataSum = data.reduce(
+    (Sum, DataItem) => Sum + DataItem.data.reduce((Sum, Value) => Sum + Value),
+    0
+  );
 
   const DiagramComputedStyle = wind.getComputedStyle(this.Diagram);
   const DiagramWidth = parseInt(
@@ -100,7 +99,7 @@ export const DiagramFunc = async function (Month, wind) {
   await DiagramCanvas.fill();
   let DegreeCalculator = 0;
 
-  const SectorMaker = async (radius, value) => {
+  const SectorMaker = async (radius, value, Ind) => {
     this.setState((PrevState) => {
       return { InfoIndex: [...PrevState.InfoIndex, null] };
     });
@@ -113,19 +112,19 @@ export const DiagramFunc = async function (Month, wind) {
       if (value.data.length > 1) {
         LinearGradXEnd =
           DiagramWidth / 2 +
-          Math.cos(Degree + (value.data[index] * 2 * Math.PI) / dataSum) *
+          Math.cos(Degree + (value.data[index] * 2 * Math.PI) / DataSum) *
             radius;
         LinearGradYEnd =
           DiagramHeight / 2 -
-          Math.sin(Degree + (value.data[index] * 2 * Math.PI) / dataSum) *
+          Math.sin(Degree + (value.data[index] * 2 * Math.PI) / DataSum) *
             -radius;
       } else {
         LinearGradXEnd =
           DiagramWidth / 2 +
-          Math.cos(Degree + (value.data[0] * Math.PI) / dataSum) * radius;
+          Math.cos(Degree + (value.data[0] * Math.PI) / DataSum) * radius;
         LinearGradYEnd =
           DiagramHeight / 2 -
-          Math.sin(Degree + (value.data[0] * Math.PI) / dataSum) * -radius;
+          Math.sin(Degree + (value.data[0] * Math.PI) / DataSum) * -radius;
       }
 
       if (index === 0) {
@@ -170,7 +169,7 @@ export const DiagramFunc = async function (Month, wind) {
       DiagramHeight / 2,
       radius,
       DegreeCalculator,
-      DegreeCalculator + (value.data[0] * 2 * Math.PI) / dataSum
+      DegreeCalculator + (value.data[0] * 2 * Math.PI) / DataSum
     );
     const LinearStats = await LineagGradStartEndSetter(DegreeCalculator, 0);
 
@@ -181,7 +180,7 @@ export const DiagramFunc = async function (Month, wind) {
     DiagramCanvas.fillStyle = grd;
     await DiagramCanvas.fill();
     DegreeCalculator =
-      DegreeCalculator + (value.data[0] * 2 * Math.PI) / dataSum;
+      DegreeCalculator + (value.data[0] * 2 * Math.PI) / DataSum;
 
     if (value.data.length > 1) {
       await DiagramCanvas.beginPath();
@@ -191,7 +190,7 @@ export const DiagramFunc = async function (Month, wind) {
         DiagramHeight / 2,
         radius,
         DegreeCalculator,
-        DegreeCalculator + (value.data[1] * 2 * Math.PI) / dataSum
+        DegreeCalculator + (value.data[1] * 2 * Math.PI) / DataSum
       );
       const LinearStats1 = await LineagGradStartEndSetter(DegreeCalculator, 1);
 
@@ -201,37 +200,38 @@ export const DiagramFunc = async function (Month, wind) {
       DiagramCanvas.fillStyle = grd1;
       await DiagramCanvas.fill();
       DegreeCalculator =
-        DegreeCalculator + (value.data[1] * 2 * Math.PI) / dataSum;
+        DegreeCalculator + (value.data[1] * 2 * Math.PI) / DataSum;
     }
+    if (Ind < data.length - 1) {
+      return (Ind + 1) % 2 === 0
+        ? wind.screen.width > 500
+          ? await SectorMaker(130, data[Ind + 1], Ind + 1)
+          : await SectorMaker(90, data[Ind + 1], Ind + 1)
+        : wind.screen.width > 500
+        ? await SectorMaker(120, data[Ind + 1], Ind + 1)
+        : await SectorMaker(80, data[Ind + 1], Ind + 1);
+    }
+    return;
   };
-  let t;
-  for (t = 0; t < data.length; t++) {
-    if ((t + 1) % 2 === 0) {
-      if (wind.screen.width > 500) {
-        await SectorMaker(130, data[t]);
-      } else {
-        await SectorMaker(90, data[t]);
-      }
-    } else {
-      if (wind.screen.width > 500) {
-        await SectorMaker(120, data[t]);
-      } else {
-        await SectorMaker(80, data[t]);
-      }
-    }
-  }
+  wind.screen.width > 500
+    ? await SectorMaker(130, data[0], 0)
+    : await SectorMaker(90, data[0], 0);
 };
-export const DiagramInfoOnClick = function (arg, data) {
+
+export const DiagramInfoOnClick = function (StatisticsInfoIndex, data) {
   return () => {
     const NewArray = this.state.InfoIndex.map((a, b) => {
-      if (b === arg) {
+      if (b === StatisticsInfoIndex) {
         return "white";
       } else {
         return null;
       }
     });
 
-    this.setState({ InfoIndex: NewArray, CurrentData: data[arg] });
+    this.setState({
+      InfoIndex: NewArray,
+      CurrentData: data[StatisticsInfoIndex],
+    });
   };
 };
 
@@ -244,8 +244,8 @@ export const SubmitData = async function () {
     this["DataAddValueInput0"].value.length > 0
   ) {
     await this.setState({ Errors: "" });
-    const CurrentStatistics = this.props.Statistics.map((a) => {
-      if (a.month === this.state.CurrentMonth.month) {
+    const CurrentStatistics = this.props.Statistics.map((MonthStatistics) => {
+      if (MonthStatistics.month === this.state.CurrentMonth.month) {
         const NewDataData = this.state.TwoValues.filter((item, index) => {
           if (
             this[`DataAddValueInput${index}`].value.length > 0 &&
@@ -278,30 +278,31 @@ export const SubmitData = async function () {
           }
         });
         const NewData = {
-          ...a,
+          ...MonthStatistics,
           income: parseFloat(this["IncomeInput"].value),
           data: NewDataData,
         };
         return NewData;
       } else {
-        return a;
+        return MonthStatistics;
       }
     });
     await this.props.SetStatistics(CurrentStatistics);
 
-    const NewAccounts = this.props.LocalStorageParsed.map((a) => {
-      if (a.Login === this.props.UserName) {
-        const NewUser = { ...a, Statistics: CurrentStatistics };
+    const NewAccounts = this.props.LocalStorageParsed.map((Account) => {
+      if (Account.Login === this.props.UserName) {
+        const NewUser = { ...Account, Statistics: CurrentStatistics };
 
         return NewUser;
       } else {
-        return a;
+        return Account;
       }
     });
     window.localStorage.setItem("Accounts", JSON.stringify(NewAccounts));
     await this.setState({
       CurrentMonth: CurrentStatistics.find(
-        (a) => a.month === this.state.CurrentMonth.month
+        (MonthStatistics) =>
+          MonthStatistics.month === this.state.CurrentMonth.month
       ),
       EditMode: false,
     });
@@ -324,14 +325,14 @@ export const AddAnotherDataEntry = function () {
     ],
   });
 };
-export const TwoValuesSetter = function (ind) {
+export const TwoValuesSetter = function (Index) {
   const NewState = [...this.state.TwoValues];
-  NewState[ind] = !NewState[ind];
+  NewState[Index] = !NewState[Index];
   this.setState({ TwoValues: NewState });
 };
-export const DataAddValueContWidthSetter = function (a, b) {
+export const DataAddValueContWidthSetter = function (Value) {
   if (!this.DataAddValueCont) {
-    this.DataAddValueCont = a;
+    this.DataAddValueCont = Value;
   }
 
   let DataAddValueContWidth;
@@ -349,8 +350,8 @@ export const DataAddValueContWidthSetter = function (a, b) {
 };
 
 export const ChangeCurrentMonthData = async function () {
-  const TwoValuesCopy = this.state.CurrentMonth.data.map((a) => {
-    if (a.data.length === 1) {
+  const TwoValuesCopy = this.state.CurrentMonth.data.map((DataObject) => {
+    if (DataObject.data.length === 1) {
       return false;
     } else {
       return true;
@@ -366,17 +367,19 @@ export const ChangeCurrentMonthData = async function () {
     TwoValues: TwoValuesCopy,
   });
 };
-export const DeleteEntireDataEntry = function (b) {
+export const DeleteEntireDataEntry = function (EntryIndex) {
   const TwoValuesCopy = this.state.TwoValues.filter(
-    (val, index) => index !== b
+    (val, Index) => Index !== EntryIndex
   );
   const InputValuesCopy = this.state.InputValues.filter(
-    (val, index) => index !== b
+    (val, Index) => Index !== EntryIndex
   );
 
   const CurrentMonthCopy = {
     ...this.state.CurrentMonth,
-    data: this.state.CurrentMonth.data.filter((val, index) => index !== b),
+    data: this.state.CurrentMonth.data.filter(
+      (val, Index) => Index !== EntryIndex
+    ),
   };
 
   this.setState({
