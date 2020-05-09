@@ -65,7 +65,6 @@ export default class Post extends Component {
           return NewItem;
         }
       );
-      let NewPostLikedCopy;
 
       if (this.props.LoggedIn) {
         const FoundLike = PostLikedCopy.find((like, Index) => {
@@ -75,18 +74,17 @@ export default class Post extends Component {
           }
           return null;
         });
-        if (!FoundLike) {
-          NewPostLikedCopy = [
-            ...PostLikedCopy,
-            {
-              image: this.props.Image,
-              name: this.props.UserName,
-              likestatus: LikeStatus,
-            },
-          ];
-        } else {
-          NewPostLikedCopy = PostLikedCopy;
-        }
+        const NewPostLikedCopy = !FoundLike
+          ? [
+              ...PostLikedCopy,
+              {
+                image: this.props.Image,
+                name: this.props.UserName,
+                likestatus: LikeStatus,
+              },
+            ]
+          : PostLikedCopy;
+
         const FeedItemsCopy = this.props.FeedItems.map((Item, Index) => {
           if (Index === this.state.postID) {
             const NewItem = { ...Item, likedby: NewPostLikedCopy };

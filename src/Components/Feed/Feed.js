@@ -41,14 +41,12 @@ export class Feed extends Component {
           <div> Add a New Post</div>
         </div>
         {this.props.FeedItems.map((FeedItem, FeedItemIndex) => {
-          let likes = 0;
-          FeedItem.likedby.forEach((LikeDislike) => {
-            if (LikeDislike.likestatus === "like") {
-              likes++;
-            } else {
-              likes -= 1;
-            }
-          });
+          const likes = FeedItem.likedby.reduce(
+            (Sum, LikeDislike) =>
+              LikeDislike.likestatus === "like" ? Sum++ : (Sum -= 1),
+            0
+          );
+
           return (
             <div
               key={FeedItemIndex}

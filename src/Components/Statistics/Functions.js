@@ -20,44 +20,7 @@ export const DiagramFunc = async function (Month, wind) {
         : [{ name: "", value1: "", value2: "" }],
   });
 
-  const scroller = async () => {
-    const ElementDistanceFromLeft = this[Month.month];
-    const ElementWidthComputed = window
-      .getComputedStyle(ElementDistanceFromLeft)
-      .getPropertyValue("width");
-
-    const ElementWidth = ElementWidthComputed.slice(
-      0,
-      ElementWidthComputed.length - 2
-    );
-    const MonthsContainerWidthComputed = window
-      .getComputedStyle(this.Months)
-      .getPropertyValue("width");
-    const MonthsContainerWidth = MonthsContainerWidthComputed.slice(
-      0,
-      MonthsContainerWidthComputed.length - 2
-    );
-    const MonthsScrollBarWidthComputed = window
-      .getComputedStyle(this.MonthsScrollBar)
-      .getPropertyValue("width");
-    const MonthsScrollBarWidth = MonthsScrollBarWidthComputed.slice(
-      0,
-      MonthsScrollBarWidthComputed.length - 2
-    );
-
-    if (
-      ElementDistanceFromLeft.offsetLeft <
-        MonthsContainerWidth - MonthsScrollBarWidth / 2 ||
-      ElementDistanceFromLeft.offsetRight <
-        MonthsContainerWidth - MonthsScrollBarWidth / 2
-    ) {
-      this.MonthsScrollBar.scrollLeft =
-        ElementDistanceFromLeft.offsetLeft -
-        MonthsScrollBarWidth / 2 +
-        ElementWidth / 2;
-    }
-  };
-  await scroller();
+  await scroller.call(this, Month);
   if (this.state.CurrentMonth.data.length === 0) {
     return;
   }
@@ -97,125 +60,20 @@ export const DiagramFunc = async function (Month, wind) {
 
   DiagramCanvas.fillStyle = "#161823";
   await DiagramCanvas.fill();
-  let DegreeCalculator = 0;
-
-  const SectorMaker = async (radius, value, Ind) => {
-    this.setState((PrevState) => {
-      return { InfoIndex: [...PrevState.InfoIndex, null] };
-    });
-    const LineagGradStartEndSetter = async (Degree, index) => {
-      const LinearGradYStart = DiagramHeight / 2 - Math.sin(Degree) * -radius;
-
-      const LinearGradXStart = DiagramWidth / 2 + Math.cos(Degree) * radius;
-      let LinearGradXEnd;
-      let LinearGradYEnd;
-      if (value.data.length > 1) {
-        LinearGradXEnd =
-          DiagramWidth / 2 +
-          Math.cos(Degree + (value.data[index] * 2 * Math.PI) / DataSum) *
-            radius;
-        LinearGradYEnd =
-          DiagramHeight / 2 -
-          Math.sin(Degree + (value.data[index] * 2 * Math.PI) / DataSum) *
-            -radius;
-      } else {
-        LinearGradXEnd =
-          DiagramWidth / 2 +
-          Math.cos(Degree + (value.data[0] * Math.PI) / DataSum) * radius;
-        LinearGradYEnd =
-          DiagramHeight / 2 -
-          Math.sin(Degree + (value.data[0] * Math.PI) / DataSum) * -radius;
-      }
-
-      if (index === 0) {
-        await this.setState((prevstate, props) => {
-          return {
-            ChartXYPositions: [
-              ...prevstate.ChartXYPositions,
-              {
-                LinearGradXEnd,
-                LinearGradYEnd,
-              },
-            ],
-          };
-        });
-      }
-
-      return [
-        LinearGradXStart,
-        LinearGradYStart,
-        LinearGradXEnd,
-        LinearGradYEnd,
-      ];
-    };
-
-    const RandomNumber = Math.random();
-    const ColorNumber = (arg) => {
-      return (
-        "hsl(" +
-        360 * RandomNumber * arg +
-        "," +
-        (70 + 25 * RandomNumber) +
-        "%," +
-        (50 + 10 * RandomNumber * arg) +
-        "%)"
-      );
-    };
-
-    await DiagramCanvas.beginPath();
-    await DiagramCanvas.moveTo(DiagramWidth / 2, DiagramHeight / 2);
-    await DiagramCanvas.arc(
-      DiagramWidth / 2,
-      DiagramHeight / 2,
-      radius,
-      DegreeCalculator,
-      DegreeCalculator + (value.data[0] * 2 * Math.PI) / DataSum
-    );
-    const LinearStats = await LineagGradStartEndSetter(DegreeCalculator, 0);
-
-    var grd = DiagramCanvas.createLinearGradient(...LinearStats);
-
-    await grd.addColorStop(0, ColorNumber(1));
-    await grd.addColorStop(1, ColorNumber(0.8));
-    DiagramCanvas.fillStyle = grd;
-    await DiagramCanvas.fill();
-    DegreeCalculator =
-      DegreeCalculator + (value.data[0] * 2 * Math.PI) / DataSum;
-
-    if (value.data.length > 1) {
-      await DiagramCanvas.beginPath();
-      await DiagramCanvas.moveTo(DiagramWidth / 2, DiagramHeight / 2);
-      await DiagramCanvas.arc(
-        DiagramWidth / 2,
-        DiagramHeight / 2,
-        radius,
-        DegreeCalculator,
-        DegreeCalculator + (value.data[1] * 2 * Math.PI) / DataSum
-      );
-      const LinearStats1 = await LineagGradStartEndSetter(DegreeCalculator, 1);
-
-      var grd1 = DiagramCanvas.createLinearGradient(...LinearStats1);
-      grd1.addColorStop(0, ColorNumber(0.8));
-      grd1.addColorStop(1, ColorNumber(1));
-      DiagramCanvas.fillStyle = grd1;
-      await DiagramCanvas.fill();
-      DegreeCalculator =
-        DegreeCalculator + (value.data[1] * 2 * Math.PI) / DataSum;
-    }
-    if (Ind < data.length - 1) {
-      return (Ind + 1) % 2 === 0
-        ? wind.screen.width > 500
-          ? await SectorMaker(130, data[Ind + 1], Ind + 1)
-          : await SectorMaker(90, data[Ind + 1], Ind + 1)
-        : wind.screen.width > 500
-        ? await SectorMaker(120, data[Ind + 1], Ind + 1)
-        : await SectorMaker(80, data[Ind + 1], Ind + 1);
-    }
-    return;
+  const DegreeCalculator = 0;
+  const Arguments = {
+    DiagramHeight,
+    DiagramWidth,
+    DataSum,
+    DiagramCanvas,
+    DegreeCalculator,
+    data,
+    wind,
   };
+
   wind.screen.width > 500
-    ? await SectorMaker(130, data[0], 0)
-    : await SectorMaker(90, data[0], 0);
+    ? await SectorMaker.call(this, 130, data[0], 0, Arguments)
+    : await SectorMaker.call(this, 90, data[0], 0, Arguments);
 };
 
 export const DiagramInfoOnClick = function (StatisticsInfoIndex, data) {
@@ -335,9 +193,8 @@ export const DataAddValueContWidthSetter = function (Value) {
     this.DataAddValueCont = Value;
   }
 
-  let DataAddValueContWidth;
   if (this.DataAddValueCont && !this.state.DataAddValueContWidth) {
-    DataAddValueContWidth = window
+    const DataAddValueContWidth = window
       .getComputedStyle(this.DataAddValueCont)
       .getPropertyValue("width");
     this.setState({
@@ -388,4 +245,220 @@ export const DeleteEntireDataEntry = function (EntryIndex) {
     CurrentMonth: CurrentMonthCopy,
     InputValues: InputValuesCopy,
   });
+};
+export const IncomeInfoClass = class {
+  constructor(that, TotalSpent) {
+    this.Balance = that.state.CurrentMonth.income - TotalSpent;
+    this.BalanceFloored =
+      this.Balance > 0 ? Math.floor(this.Balance) : Math.ceil(this.Balance);
+    this.DecimalPart = (this.Balance > 0
+      ? this.Balance - this.BalanceFloored
+      : this.BalanceFloored - this.Balance
+    )
+      .toFixed(2)
+      .toString()
+      .slice(2, 4);
+    this.IncomeFloored =
+      that.state.CurrentMonth.income > 0
+        ? Math.floor(that.state.CurrentMonth.income)
+        : Math.ceil(that.state.CurrentMonth.income);
+    this.IncomeDecimal = (that.state.CurrentMonth.income > 0
+      ? that.state.CurrentMonth.income - this.IncomeFloored
+      : this.IncomeFloored - that.state.CurrentMonth.income
+    )
+      .toFixed(2)
+      .toString()
+      .slice(2, 4);
+    this.ExpenseFloored = Math.floor(TotalSpent);
+    this.ExpenseDecimal = (TotalSpent - this.ExpenseFloored)
+      .toFixed(2)
+      .toString()
+      .slice(2, 4);
+  }
+};
+const scroller = async function (Month) {
+  const ElementDistanceFromLeft = this[Month.month];
+  const ElementWidthComputed = window
+    .getComputedStyle(ElementDistanceFromLeft)
+    .getPropertyValue("width");
+
+  const ElementWidth = ElementWidthComputed.slice(
+    0,
+    ElementWidthComputed.length - 2
+  );
+  const MonthsContainerWidthComputed = window
+    .getComputedStyle(this.Months)
+    .getPropertyValue("width");
+  const MonthsContainerWidth = MonthsContainerWidthComputed.slice(
+    0,
+    MonthsContainerWidthComputed.length - 2
+  );
+  const MonthsScrollBarWidthComputed = window
+    .getComputedStyle(this.MonthsScrollBar)
+    .getPropertyValue("width");
+  const MonthsScrollBarWidth = MonthsScrollBarWidthComputed.slice(
+    0,
+    MonthsScrollBarWidthComputed.length - 2
+  );
+
+  if (
+    ElementDistanceFromLeft.offsetLeft <
+      MonthsContainerWidth - MonthsScrollBarWidth / 2 ||
+    ElementDistanceFromLeft.offsetRight <
+      MonthsContainerWidth - MonthsScrollBarWidth / 2
+  ) {
+    this.MonthsScrollBar.scrollLeft =
+      ElementDistanceFromLeft.offsetLeft -
+      MonthsScrollBarWidth / 2 +
+      ElementWidth / 2;
+  }
+};
+const SectorMaker = async function (
+  radius,
+  value,
+  Ind,
+  {
+    DiagramHeight,
+    DiagramWidth,
+    DataSum,
+    DiagramCanvas,
+    DegreeCalculator,
+    data,
+    wind,
+  }
+) {
+  this.setState((PrevState) => {
+    return { InfoIndex: [...PrevState.InfoIndex, null] };
+  });
+  const LineagGradStartEndSetter = async (Degree, index) => {
+    const LinearGradYStart = DiagramHeight / 2 - Math.sin(Degree) * -radius;
+
+    const LinearGradXStart = DiagramWidth / 2 + Math.cos(Degree) * radius;
+    const LinearGradXEnd =
+      value.data.length > 1
+        ? DiagramWidth / 2 +
+          Math.cos(Degree + (value.data[index] * 2 * Math.PI) / DataSum) *
+            radius
+        : DiagramWidth / 2 +
+          Math.cos(Degree + (value.data[0] * Math.PI) / DataSum) * radius;
+    const LinearGradYEnd =
+      value.data.length > 1
+        ? DiagramHeight / 2 -
+          Math.sin(Degree + (value.data[index] * 2 * Math.PI) / DataSum) *
+            -radius
+        : DiagramHeight / 2 -
+          Math.sin(Degree + (value.data[0] * Math.PI) / DataSum) * -radius;
+
+    if (index === 0) {
+      await this.setState((prevstate, props) => {
+        return {
+          ChartXYPositions: [
+            ...prevstate.ChartXYPositions,
+            {
+              LinearGradXEnd,
+              LinearGradYEnd,
+            },
+          ],
+        };
+      });
+    }
+
+    return [LinearGradXStart, LinearGradYStart, LinearGradXEnd, LinearGradYEnd];
+  };
+
+  const RandomNumber = Math.random();
+  const ColorNumber = (arg) => {
+    return (
+      "hsl(" +
+      360 * RandomNumber * arg +
+      "," +
+      (70 + 25 * RandomNumber) +
+      "%," +
+      (50 + 10 * RandomNumber * arg) +
+      "%)"
+    );
+  };
+
+  await DiagramCanvas.beginPath();
+  await DiagramCanvas.moveTo(DiagramWidth / 2, DiagramHeight / 2);
+  await DiagramCanvas.arc(
+    DiagramWidth / 2,
+    DiagramHeight / 2,
+    radius,
+    DegreeCalculator,
+    DegreeCalculator + (value.data[0] * 2 * Math.PI) / DataSum
+  );
+  const LinearStats = await LineagGradStartEndSetter(DegreeCalculator, 0);
+
+  const grd = DiagramCanvas.createLinearGradient(...LinearStats);
+
+  await grd.addColorStop(0, ColorNumber(1));
+  await grd.addColorStop(1, ColorNumber(0.8));
+  DiagramCanvas.fillStyle = grd;
+  await DiagramCanvas.fill();
+  DegreeCalculator = DegreeCalculator + (value.data[0] * 2 * Math.PI) / DataSum;
+
+  if (value.data.length > 1) {
+    await DiagramCanvas.beginPath();
+    await DiagramCanvas.moveTo(DiagramWidth / 2, DiagramHeight / 2);
+    await DiagramCanvas.arc(
+      DiagramWidth / 2,
+      DiagramHeight / 2,
+      radius,
+      DegreeCalculator,
+      DegreeCalculator + (value.data[1] * 2 * Math.PI) / DataSum
+    );
+    const LinearStats1 = await LineagGradStartEndSetter(DegreeCalculator, 1);
+
+    const grd1 = DiagramCanvas.createLinearGradient(...LinearStats1);
+    grd1.addColorStop(0, ColorNumber(0.8));
+    grd1.addColorStop(1, ColorNumber(1));
+    DiagramCanvas.fillStyle = grd1;
+    await DiagramCanvas.fill();
+    DegreeCalculator =
+      DegreeCalculator + (value.data[1] * 2 * Math.PI) / DataSum;
+  }
+  const PassingArguments = {
+    DiagramHeight,
+    DiagramWidth,
+    DataSum,
+    DiagramCanvas,
+    DegreeCalculator,
+    data,
+    wind,
+  };
+  if (Ind < data.length - 1) {
+    return (Ind + 1) % 2 === 0
+      ? wind.screen.width > 500
+        ? await SectorMaker.call(
+            this,
+            130,
+            data[Ind + 1],
+            Ind + 1,
+            PassingArguments
+          )
+        : await SectorMaker.call(
+            this,
+            90,
+            data[Ind + 1],
+            Ind + 1,
+            PassingArguments
+          )
+      : wind.screen.width > 500
+      ? await SectorMaker.call(
+          this,
+          120,
+          data[Ind + 1],
+          Ind + 1,
+          PassingArguments
+        )
+      : await SectorMaker.call(
+          this,
+          80,
+          data[Ind + 1],
+          Ind + 1,
+          PassingArguments
+        );
+  }
+  return;
 };

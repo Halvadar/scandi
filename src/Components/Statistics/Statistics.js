@@ -9,6 +9,7 @@ import Minus from "./minus.svg";
 import PlusData from "./PlusData.svg";
 import Income from "./Income.svg";
 import Expense from "./Expense.svg";
+const AnimationArrCopy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 export default class Statistics extends Component {
   constructor() {
@@ -40,11 +41,13 @@ export default class Statistics extends Component {
     );
     this.ChangeCurrentMonthData = Functions.ChangeCurrentMonthData.bind(this);
     this.DeleteEntireDataEntry = Functions.DeleteEntireDataEntry.bind(this);
+    this.IncomeInfoClass = Functions.IncomeInfoClass.bind(this);
     this.ResizeFunc = this.ResizeFunc.bind(this);
     this.onHoverAnimation = this.onHoverAnimation.bind(this);
     this.OnLeave = this.OnLeave.bind(this);
     this.InputValueSetter = this.InputValueSetter.bind(this);
-    this.interval = undefined;
+
+    this.Interval = undefined;
   }
 
   componentDidMount() {
@@ -73,16 +76,16 @@ export default class Statistics extends Component {
   onHoverAnimation(Index) {
     return () => {
       this.setState({ MonthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
-      const AnimationArrCopy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-      let Variable = 0;
-      this.interval = setInterval(() => {
+      this.Interval = setInterval(() => {
         if (this.state.MonthAnimations[Index] < 10) {
-          Variable++;
-          AnimationArrCopy[Index] = Variable;
-          this.setState({ MonthAnimations: AnimationArrCopy });
+          const AnimatedArr = AnimationArrCopy.map((Item, ItemIndex) =>
+            Index === ItemIndex ? this.state.MonthAnimations[Index] + 1 : Item
+          );
+
+          this.setState({ MonthAnimations: AnimatedArr });
         } else {
-          clearInterval(this.interval);
+          clearInterval(this.Interval);
         }
       }, 10);
     };
@@ -92,7 +95,7 @@ export default class Statistics extends Component {
       const AnimationArrCopy = [...this.state.MonthAnimations];
       AnimationArrCopy[Index] = 0;
       this.setState({ MonthAnimations: AnimationArrCopy });
-      clearInterval(this.interval);
+      clearInterval(this.Interval);
     };
   }
 
@@ -105,17 +108,17 @@ export default class Statistics extends Component {
         const NewInputValues = PrevState.InputValues.map(
           (Item, ObjectIndex) => {
             if (Index === ObjectIndex) {
-              let TypeValue;
-              if (Type === "name") {
-                TypeValue = { name: this[`DataAddNameInput${Index}`].value };
-                console.log(this.state.InputValues[Index].name);
-              } else if (Type === "value1") {
-                TypeValue = { value1: this[`DataAddValueInput${Index}`].value };
-              } else if (Type === "value2") {
-                TypeValue = {
-                  value2: this[`DataAddValueInputSecond${Index}`].value,
-                };
-              }
+              const TypeValue =
+                Type === "name"
+                  ? { name: this[`DataAddNameInput${Index}`].value }
+                  : Type === "value1"
+                  ? { value1: this[`DataAddValueInput${Index}`].value }
+                  : Type === "value2"
+                  ? {
+                      value2: this[`DataAddValueInputSecond${Index}`].value,
+                    }
+                  : undefined;
+
               const ThisInputsCopy = {
                 ...PrevState.InputValues[Index],
                 ...TypeValue,
@@ -137,50 +140,22 @@ export default class Statistics extends Component {
       ),
       this.state.CurrentData.name,
     ];
-    let TotalSpent = 0;
-    let Balance;
-    let BalanceFloored;
-    let DecimalPart;
-    let IncomeFloored;
-    let IncomeDecimal;
-    let ExpenseFloored;
-    let ExpenseDecimal;
+    const TotalSpent =
+      this.state.CurrentMonth &&
+      this.state.CurrentMonth.data.reduce((Total, ObjectValue) => {
+        return (
+          Total +
+          ObjectValue.data.reduce(
+            (ItemTotal, ItemValue) => ItemTotal + ItemValue,
+            0
+          )
+        );
+      }, 0);
 
-    this.state.CurrentMonth &&
-      this.state.CurrentMonth.data.forEach((DataObject) => {
-        DataObject.data.forEach((DataValue) => {
-          TotalSpent = TotalSpent + DataValue;
-        });
-      });
-    if (this.state.CurrentMonth && this.state.CurrentMonth.income) {
-      Balance = this.state.CurrentMonth.income - TotalSpent;
-
-      BalanceFloored = Balance > 0 ? Math.floor(Balance) : Math.ceil(Balance);
-      DecimalPart = (Balance > 0
-        ? Balance - BalanceFloored
-        : BalanceFloored - Balance
-      )
-        .toFixed(2)
-        .toString()
-        .slice(2, 4);
-      IncomeFloored =
-        this.state.CurrentMonth.income > 0
-          ? Math.floor(this.state.CurrentMonth.income)
-          : Math.ceil(this.state.CurrentMonth.income);
-      IncomeDecimal = (this.state.CurrentMonth.income > 0
-        ? this.state.CurrentMonth.income - IncomeFloored
-        : IncomeFloored - this.state.CurrentMonth.income
-      )
-        .toFixed(2)
-        .toString()
-        .slice(2, 4);
-      ExpenseFloored = Math.floor(TotalSpent);
-
-      ExpenseDecimal = (TotalSpent - ExpenseFloored)
-        .toFixed(2)
-        .toString()
-        .slice(2, 4);
-    }
+    const IncomeInfo =
+      this.state.CurrentMonth &&
+      this.state.CurrentMonth.income &&
+      new this.IncomeInfoClass(this, TotalSpent);
 
     return (
       <div className="Statistic">
@@ -296,10 +271,11 @@ export default class Statistics extends Component {
                     : null}
                   <div className="CenterBalance">
                     <div className="BalanceNumber">
-                      ${Balance < 0 && Balance > -1 && "-"}
-                      {this.state.CurrentMonth && BalanceFloored}
+                      $
+                      {IncomeInfo.Balance < 0 && IncomeInfo.Balance > -1 && "-"}
+                      {this.state.CurrentMonth && IncomeInfo.BalanceFloored}
                       <div className="DecimalPortion">
-                        {this.state.CurrentMonth && DecimalPart}
+                        {this.state.CurrentMonth && IncomeInfo.DecimalPart}
                       </div>
                     </div>
                     <div className="Balance">Balance</div>
@@ -318,16 +294,16 @@ export default class Statistics extends Component {
                 <div className="IncomeExpense">
                   <div className="Income">
                     +$
-                    {this.state.CurrentMonth && IncomeFloored}
+                    {this.state.CurrentMonth && IncomeInfo.IncomeFloored}
                     <div className="DecimalPortionIncomeExpense">
-                      {this.state.CurrentMonth && IncomeDecimal}
+                      {this.state.CurrentMonth && IncomeInfo.IncomeDecimal}
                       <img alt="Income" src={Income}></img>
                     </div>
                   </div>
                   <div className="Expense">
-                    -${this.state.CurrentMonth && ExpenseFloored}
+                    -${this.state.CurrentMonth && IncomeInfo.ExpenseFloored}
                     <div className="DecimalPortionIncomeExpense">
-                      {this.state.CurrentMonth && ExpenseDecimal}
+                      {this.state.CurrentMonth && IncomeInfo.ExpenseDecimal}
                       <img alt="Expense" src={Expense}></img>
                     </div>
                   </div>
