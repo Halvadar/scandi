@@ -18,13 +18,32 @@ body {
 .Title {
   z-index: 1;
   color: rgb(216, 216, 216);
-  font-size: 2.5rem;
+  font-size: 1.5rem;
   font-weight: 500;
   text-align: left;
   width: 100%;
   padding: 0 10% 0 5%;
   box-sizing: border-box;
   margin-top: 70%;
+}
+.Preview {
+  position: relative;
+  z-index: 5;
+  padding-top: 2%;
+  color: rgb(190, 190, 190);
+  font-size: 18px;
+  font-weight: 500;
+  padding-bottom: 5%;
+  box-sizing: border-box;
+  border-bottom: 1px solid rgb(119, 119, 119);
+  width: 100%;
+  overflow: hidden;
+
+  height: 7rem;
+  box-sizing: border-box;
+}
+.PreviewContent {
+  height: 100%;
 }
 .TitleFeed:hover {
   color: rgb(170, 242, 255) !important;
@@ -49,10 +68,14 @@ body {
   }
   .Title {
     padding: 0 25% 0 5%;
+    font-size: 2.5rem;
   }
   .LinearGrad {
     width: 120%;
     left: -10%;
+  }
+  .Preview {
+    font-size: 30px;
   }
 }
 .FeedContainer {
@@ -85,22 +108,6 @@ body {
   margin-top: 5%;
   background: linear-gradient(rgba(255, 0, 0, 0) 15%, #161823 15% 100%);
   height: max-content;
-}
-.Preview {
-  position: relative;
-  z-index: 5;
-  padding-top: 2%;
-  color: rgb(190, 190, 190);
-  font-size: 30px;
-  font-weight: 500;
-  padding-bottom: 5%;
-  box-sizing: border-box;
-  border-bottom: 1px solid rgb(119, 119, 119);
-  width: 100%;
-  overflow: hidden;
-  text-overflow: clip;
-  height: 7rem;
-  box-sizing: content-box;
 }
 
 .AuthorDate {

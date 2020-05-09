@@ -73,6 +73,7 @@ class App extends Component {
               render={(props) => {
                 return (
                   <AddNewPost
+                    DistanceFromRight={this.state.DistanceFromRight}
                     Image={this.state.Image}
                     LoggedIn={this.state.LoggedIn}
                     SetFeedData={this.SetFeedData}
@@ -88,6 +89,7 @@ class App extends Component {
               render={(props) => {
                 return (
                   <Post
+                    DistanceFromRight={this.state.DistanceFromRight}
                     Image={this.state.Image}
                     UserName={this.state.UserName}
                     LoggedIn={this.state.LoggedIn}
@@ -103,6 +105,7 @@ class App extends Component {
               render={(props) => {
                 return (
                   <Authenticate
+                    DistanceFromRight={this.state.DistanceFromRight}
                     SetLocalStorageParsed={this.SetLocalStorageParsed}
                     LoggedIn={this.state.LoggedIn}
                     {...props}
@@ -117,6 +120,7 @@ class App extends Component {
               render={(props) => {
                 return (
                   <Statistics
+                    DistanceFromRight={this.state.DistanceFromRight}
                     SetStatistics={this.SetStatistics}
                     {...this.state}
                     {...props}

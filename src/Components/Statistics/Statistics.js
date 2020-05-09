@@ -63,6 +63,7 @@ export default class Statistics extends Component {
   }
   componentWillUnmount() {
     window.removeEventListener("resize", this.ResizeFunc);
+    clearInterval(this.Interval);
   }
   ResizeFunc() {
     if (window.screen.width > 500) {
@@ -161,6 +162,7 @@ export default class Statistics extends Component {
       <div className="Statistic">
         <div className="GoBack_LogoCont">
           <img
+            style={{ left: this.props.DistanceFromRight + 20 + "px" }}
             onClick={() => {
               this.props.history.push("/feed");
             }}

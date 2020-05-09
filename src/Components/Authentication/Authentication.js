@@ -107,7 +107,12 @@ export default class Authentication extends Component {
           }}
           className="AuthenticationGoBack"
         >
-          <img src={Arrow} alt="GoBack" className="GoBack"></img>
+          <img
+            style={{ left: this.props.DistanceFromRight + 10 + "px" }}
+            src={Arrow}
+            alt="GoBack"
+            className="GoBack"
+          ></img>
         </div>
         <div
           className="AuthenticationContainer"

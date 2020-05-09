@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./Feed.scss";
-
 import image0 from "./image0.png";
 import image1 from "./image1.png";
 import image2 from "./image2.png";
@@ -17,12 +16,33 @@ const images = [image0, image1, image2, image3, image4, image5];
 export class Feed extends Component {
   constructor() {
     super();
+    this.state = {
+      PreviewWidth: undefined,
+    };
     this.AddYourPost = this.AddYourPost.bind(this);
   }
   goToPost = (arg) => {
     return () => {
       this.props.history.push(arg);
     };
+  };
+  componentDidMount() {
+    this.setState({
+      PreviewWidth: window
+        .getComputedStyle(this.PreviewRef)
+        .getPropertyValue("width"),
+    });
+    window.addEventListener("resize", this.ResizeFunc);
+  }
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.ResizeFunc);
+  }
+  ResizeFunc = () => {
+    this.setState({
+      PreviewWidth: window
+        .getComputedStyle(this.PreviewRef)
+        .getPropertyValue("width"),
+    });
   };
   AddYourPost() {
     this.props.history.push("/AddNewPost");
@@ -68,7 +88,18 @@ export class Feed extends Component {
                 <div className="Title TitleFeed">{FeedItem.title}</div>
               </div>
               <div className="Lower">
-                <div className="Preview">{FeedItem.post}</div>
+                <div className="Preview" ref={(a) => (this.PreviewRef = a)}>
+                  <div
+                    className="PreviewContent"
+                    style={{
+                      columnWidth: this.state.PreviewWidth
+                        ? this.state.PreviewWidth
+                        : null,
+                    }}
+                  >
+                    {FeedItem.post}
+                  </div>
+                </div>
                 <div className="AuthorDate">
                   <div className="Author">
                     By <span className="Name">{FeedItem.author}</span>

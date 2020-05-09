@@ -59,7 +59,12 @@ export default class AddNewPost extends Component {
           }}
           className="AuthenticationGoBack"
         >
-          <img src={Arrow} alt="GoBack" className="GoBack"></img>
+          <img
+            style={{ left: this.props.DistanceFromRight + 20 + "px" }}
+            src={Arrow}
+            alt="GoBack"
+            className="GoBack"
+          ></img>
         </div>
         <div className="AddNewPostCont">
           <div className="AddaNewPost"> Add a New Post</div>
