@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./Authentication.scss";
-import Arrow from "../Statistics/Arrow.svg";
 const NewAccStats = [
   "January",
   "February",
@@ -118,7 +117,7 @@ export default class Authentication extends Component {
       <React.Fragment>
         <div
           className="AuthenticationContainer"
-          ref={(a) => (this.AuthenticPage = a)}
+          ref={(Elem) => (this.AuthenticPage = Elem)}
         >
           {this.props.LoggedIn ? (
             <React.Fragment>
@@ -136,7 +135,7 @@ export default class Authentication extends Component {
               <div className="ErrorMessage">{this.state.ErrorMessage}</div>
               <div className="Login">
                 <input
-                  ref={(a) => (this.Login = a)}
+                  ref={(Elem) => (this.Login = Elem)}
                   className="Input"
                   placeholder="Login"
                 ></input>
@@ -145,7 +144,7 @@ export default class Authentication extends Component {
                 <input
                   type="password"
                   className="Input"
-                  ref={(a) => (this.Password = a)}
+                  ref={(Elem) => (this.Password = Elem)}
                   placeholder="Password"
                 ></input>
               </div>
@@ -153,7 +152,7 @@ export default class Authentication extends Component {
                 <div style={{ marginBottom: "1rem" }}> Not Required</div>
                 <input
                   className="Input"
-                  ref={(a) => (this.ProfilePic = a)}
+                  ref={(Elem) => (this.ProfilePic = Elem)}
                   placeholder="Profile Image Url"
                 ></input>
               </div>

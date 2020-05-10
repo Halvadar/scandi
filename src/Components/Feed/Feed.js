@@ -92,7 +92,10 @@ export class Feed extends Component {
                 <div className="Title TitleFeed">{FeedItem.title}</div>
               </div>
               <div className="Lower">
-                <div className="Preview" ref={(a) => (this.PreviewRef = a)}>
+                <div
+                  className="Preview"
+                  ref={(Elem) => (this.PreviewRef = Elem)}
+                >
                   <div
                     className="PreviewContent"
                     style={{

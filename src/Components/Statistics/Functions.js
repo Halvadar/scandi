@@ -6,7 +6,7 @@ export const DiagramFunc = async function (Month, wind) {
     CurrentData: null,
     EditMode: false,
     DataEntryAmount: 1,
-    TwoValues: [false],
+    InputDoubleValue: [false],
     IncomeInputValue: Month.income ? Month.income : "",
     InputValues:
       Month.data.length > 0
@@ -78,8 +78,8 @@ export const DiagramFunc = async function (Month, wind) {
 
 export const DiagramInfoOnClick = function (StatisticsInfoIndex, data) {
   return () => {
-    const NewArray = this.state.InfoIndex.map((a, b) => {
-      if (b === StatisticsInfoIndex) {
+    const NewArray = this.state.InfoIndex.map((InfoItem, InfoIndex) => {
+      if (InfoIndex === StatisticsInfoIndex) {
         return "white";
       } else {
         return null;
@@ -104,34 +104,44 @@ export const SubmitData = async function () {
     await this.setState({ Errors: "" });
     const CurrentStatistics = this.props.Statistics.map((MonthStatistics) => {
       if (MonthStatistics.month === this.state.CurrentMonth.month) {
-        const NewDataData = this.state.TwoValues.filter((item, index) => {
-          if (
-            this[`DataAddValueInput${index}`].value.length > 0 &&
-            this[`DataAddNameInput${index}`].value.length > 0
-          ) {
-            return true;
+        const NewDataData = this.state.InputDoubleValue.filter(
+          (item, index) => {
+            if (
+              this[`DataAddValueInput${index}`].value.length > 0 &&
+              this[`DataAddNameInput${index}`].value.length > 0
+            ) {
+              return true;
+            }
+            return false;
           }
-          return false;
-        }).map((e, r) => {
-          if (this[`DataAddValueInputSecond${r}`]) {
-            if (this[`DataAddValueInputSecond${r}`].value.length > 0) {
+        ).map((StatItem, StatItemIndex) => {
+          if (this[`DataAddValueInputSecond${StatItemIndex}`]) {
+            if (
+              this[`DataAddValueInputSecond${StatItemIndex}`].value.length > 0
+            ) {
               return {
-                name: this[`DataAddNameInput${r}`].value,
+                name: this[`DataAddNameInput${StatItemIndex}`].value,
                 data: [
-                  parseFloat(this[`DataAddValueInput${r}`].value),
-                  parseFloat(this[`DataAddValueInputSecond${r}`].value),
+                  parseFloat(this[`DataAddValueInput${StatItemIndex}`].value),
+                  parseFloat(
+                    this[`DataAddValueInputSecond${StatItemIndex}`].value
+                  ),
                 ],
               };
             } else {
               return {
-                name: this[`DataAddNameInput${r}`].value,
-                data: [parseFloat(this[`DataAddValueInput${r}`].value)],
+                name: this[`DataAddNameInput${StatItemIndex}`].value,
+                data: [
+                  parseFloat(this[`DataAddValueInput${StatItemIndex}`].value),
+                ],
               };
             }
           } else {
             return {
-              name: this[`DataAddNameInput${r}`].value,
-              data: [parseFloat(this[`DataAddValueInput${r}`].value)],
+              name: this[`DataAddNameInput${StatItemIndex}`].value,
+              data: [
+                parseFloat(this[`DataAddValueInput${StatItemIndex}`].value),
+              ],
             };
           }
         });
@@ -172,11 +182,11 @@ export const SubmitData = async function () {
   }
 };
 export const AddAnotherDataEntry = function () {
-  const NewState = [...this.state.TwoValues, false];
+  const NewState = [...this.state.InputDoubleValue, false];
 
   this.setState({
     DataEntryAmount: this.state.DataEntryAmount + 1,
-    TwoValues: NewState,
+    InputDoubleValue: NewState,
     InputValues: [
       ...this.state.InputValues,
       { name: "", value1: "", value2: "" },
@@ -184,9 +194,9 @@ export const AddAnotherDataEntry = function () {
   });
 };
 export const TwoValuesSetter = function (Index) {
-  const NewState = [...this.state.TwoValues];
+  const NewState = [...this.state.InputDoubleValue];
   NewState[Index] = !NewState[Index];
-  this.setState({ TwoValues: NewState });
+  this.setState({ InputDoubleValue: NewState });
 };
 export const DataAddValueContWidthSetter = function (Value) {
   if (!this.DataAddValueCont) {
@@ -221,11 +231,11 @@ export const ChangeCurrentMonthData = async function () {
     CurrentData: null,
     EditMode: true,
     DataEntryAmount: this.state.CurrentMonth.data.length,
-    TwoValues: TwoValuesCopy,
+    InputDoubleValue: TwoValuesCopy,
   });
 };
 export const DeleteEntireDataEntry = function (EntryIndex) {
-  const TwoValuesCopy = this.state.TwoValues.filter(
+  const TwoValuesCopy = this.state.InputDoubleValue.filter(
     (val, Index) => Index !== EntryIndex
   );
   const InputValuesCopy = this.state.InputValues.filter(
@@ -241,7 +251,7 @@ export const DeleteEntireDataEntry = function (EntryIndex) {
 
   this.setState({
     DataEntryAmount: this.state.DataEntryAmount - 1,
-    TwoValues: TwoValuesCopy,
+    InputDoubleValue: TwoValuesCopy,
     CurrentMonth: CurrentMonthCopy,
     InputValues: InputValuesCopy,
   });

@@ -1,19 +1,18 @@
 import React, { Component } from "react";
 import "./AddNewPost.scss";
-import Arrow from "../Statistics/Arrow.svg";
 export default class AddNewPost extends Component {
   constructor() {
     super();
     this.state = {
-      Error: "",
+      error: "",
     };
-    this.SubmitNewPost = this.SubmitNewPost.bind(this);
+    this.submitNewPost = this.submitNewPost.bind(this);
     this.ImageValidChecker = this.ImageValidChecker.bind(this);
   }
   componentDidMount() {
     this.ImageRef.addEventListener("keypress", (keypress) => {
       if (keypress.key === "Enter") {
-        this.SubmitNewPost();
+        this.submitNewPost();
       }
     });
   }
@@ -33,7 +32,7 @@ export default class AddNewPost extends Component {
     return ImageStatus;
   }
 
-  async SubmitNewPost() {
+  async submitNewPost() {
     if (this.TitleRef.value.length > 0 && this.TextRef.value.length > 0) {
       if (this.props.LoggedIn) {
         const ImageValid = await this.ImageValidChecker(this.ImageRef.value);
@@ -52,16 +51,16 @@ export default class AddNewPost extends Component {
           },
         ];
         localStorage.setItem("Feed", JSON.stringify(NewFeed));
-        this.setState({ Error: "" });
+        this.setState({ error: "" });
         this.props.SetFeedData(NewFeed);
         this.props.history.push("/feed");
       } else {
         this.ErrorMessage.scrollIntoView();
-        this.setState({ Error: "You need to Log in" });
+        this.setState({ error: "You need to Log in" });
       }
     } else {
       this.ErrorMessage.scrollIntoView();
-      this.setState({ Error: "Fill The Inputs" });
+      this.setState({ error: "Fill The Inputs" });
     }
   }
 
@@ -70,31 +69,34 @@ export default class AddNewPost extends Component {
       <React.Fragment>
         <div className="AddNewPostCont">
           <div className="AddaNewPost"> Add a New Post</div>
-          <div ref={(a) => (this.ErrorMessage = a)} className="ErrorMessage">
-            {this.state.Error}
+          <div
+            ref={(Elem) => (this.ErrorMessage = Elem)}
+            className="ErrorMessage"
+          >
+            {this.state.error}
           </div>
           <div className="AddTitle">
             <div>Title</div>
             <input
-              ref={(a) => (this.TitleRef = a)}
+              ref={(Elem) => (this.TitleRef = Elem)}
               className="AddNewPostTitleInput"
             ></input>
           </div>
           <div className="AddText">
             <div>Text</div>
             <textarea
-              ref={(a) => (this.TextRef = a)}
+              ref={(Elem) => (this.TextRef = Elem)}
               className="AddNewPostTextInput"
             ></textarea>
           </div>
           <div className="AddNewPostImage">
             <div>Add Background Image URL (not required)</div>
-            <input ref={(a) => (this.ImageRef = a)}></input>
+            <input ref={(Elem) => (this.ImageRef = Elem)}></input>
           </div>
           <div>
             <button
-              onClick={this.SubmitNewPost}
-              ref={(a) => (this.SubmitRef = a)}
+              onClick={this.submitNewPost}
+              ref={(Elem) => (this.SubmitRef = Elem)}
               className="AddNewPostSubmit"
             >
               Submit

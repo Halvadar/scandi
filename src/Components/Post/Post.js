@@ -9,7 +9,6 @@ import image5 from "../Feed/image5.png";
 import background0 from "../Feed/Background0.jpg";
 import background1 from "../Feed/Background1.jpg";
 import background2 from "../Feed/Background2.jpg";
-import Arrow from "../Statistics/Arrow.svg";
 import like from "./like.svg";
 import dislike from "./dislike.svg";
 
@@ -205,8 +204,8 @@ export default class Post extends Component {
                   <div className="Comment">
                     <div className="CommentCont">
                       <textarea
-                        ref={(a) => {
-                          this.CommentRef = a;
+                        ref={(Elem) => {
+                          this.CommentRef = Elem;
                         }}
                         className="CommentText"
                       ></textarea>
@@ -231,8 +230,8 @@ export default class Post extends Component {
                       key={Index}
                       ref={
                         Index === 0
-                          ? (r) => {
-                              this.FirstCommentRef = r;
+                          ? (Elem) => {
+                              this.FirstCommentRef = Elem;
                             }
                           : null
                       }

@@ -12,7 +12,7 @@ import Arrow from "./Components/Statistics/Arrow.svg";
 class App extends Component {
   constructor() {
     super();
-    if (!localStorage.Feed) {
+    if (!localStorage) {
       localStorage.setItem("Feed", JSON.stringify(FeedData));
     }
 
@@ -67,7 +67,10 @@ class App extends Component {
   }
   render() {
     return (
-      <div ref={(a) => (this.MainContainer = a)} className="MainContainer">
+      <div
+        ref={(Elem) => (this.MainContainer = Elem)}
+        className="MainContainer"
+      >
         <Router>
           <Switch>
             <Route

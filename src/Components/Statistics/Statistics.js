@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import "./Statistics.scss";
 import statistics from "../Navbar/statistics.svg";
-import Arrow from "./Arrow.svg";
-
 import * as Functions from "./Functions";
 import Plus from "./Plus.svg";
 import Minus from "./minus.svg";
@@ -22,7 +20,7 @@ export default class Statistics extends Component {
       ParsedStatistics: null,
       MonthsScrollPosition: 0,
       CanvasHeightWidth: [200, 200],
-      TwoValues: [false],
+      InputDoubleValue: [false],
       DataAddValueContWidth: undefined,
       DataEntryAmount: 1,
       EditMode: false,
@@ -171,10 +169,10 @@ export default class Statistics extends Component {
           <React.Fragment>
             <div
               className="MonthsContainer"
-              ref={(a) => (this.MonthsScrollBar = a)}
+              ref={(Elem) => (this.MonthsScrollBar = Elem)}
             >
               {this.state.CurrentMonth ? (
-                <div ref={(a) => (this.Months = a)} className="Months">
+                <div ref={(Elem) => (this.Months = Elem)} className="Months">
                   {[
                     "January",
                     "February",
@@ -192,7 +190,7 @@ export default class Statistics extends Component {
                     return (
                       <div
                         key={Index}
-                        ref={(t) => (this[MonthName] = t)}
+                        ref={(Elem) => (this[MonthName] = Elem)}
                         style={{
                           background:
                             this.state.CurrentMonth.month === MonthName
@@ -230,7 +228,7 @@ export default class Statistics extends Component {
                   <canvas
                     height={this.state.CanvasHeightWidth[0] + "px"}
                     width={this.state.CanvasHeightWidth[1] + "px"}
-                    ref={(a) => (this.Diagram = a)}
+                    ref={(Elem) => (this.Diagram = Elem)}
                     className="Diagram"
                   ></canvas>
                   {this.state.ChartXYPositions.length > 0 &&
@@ -318,7 +316,7 @@ export default class Statistics extends Component {
                     Add Your Income For This Month
                   </div>
                   <input
-                    ref={(a) => (this.IncomeInput = a)}
+                    ref={(Elem) => (this.IncomeInput = Elem)}
                     className="IncomeInput"
                     step="0.01"
                     type="number"
@@ -330,7 +328,7 @@ export default class Statistics extends Component {
                 <div className="AddYourSpendings">
                   <div style={{ margin: "1rem" }}>Add Your Spendings</div>
                 </div>
-                {this.state.TwoValues.map((Value, Index) => {
+                {this.state.InputDoubleValue.map((Value, Index) => {
                   return (
                     <React.Fragment>
                       <div key={Index} className="DataAddCont">
@@ -355,23 +353,27 @@ export default class Statistics extends Component {
                             value={this.state.InputValues[Index].name}
                             onChange={this.InputValueSetter("name", Index)}
                             className="DataAddNameInput"
-                            ref={(a) => (this[`DataAddNameInput${Index}`] = a)}
+                            ref={(Elem) =>
+                              (this[`DataAddNameInput${Index}`] = Elem)
+                            }
                           ></input>
                         </div>
                         <div
                           className="DataAddNameCont DataAddValueCont"
-                          ref={(a) => {
+                          ref={(Elem) => {
                             if (Index === 0) {
-                              this.DataAddValueContWidthSetter(a, Index);
+                              this.DataAddValueContWidthSetter(Elem, Index);
                             }
                           }}
                         >
                           Spent
                           <input
-                            ref={(a) => (this[`DataAddValueInput${Index}`] = a)}
+                            ref={(Elem) =>
+                              (this[`DataAddValueInput${Index}`] = Elem)
+                            }
                             style={{
                               Width: "100%",
-                              maxWidth: this.state.TwoValues[Index]
+                              maxWidth: this.state.InputDoubleValue[Index]
                                 ? this.state.DataAddValueContWidth / 2 + "px"
                                 : null,
                             }}
@@ -382,10 +384,10 @@ export default class Statistics extends Component {
                             placeholder="$"
                             className="DataAddNameInput DataAddValueInput "
                           ></input>
-                          {this.state.TwoValues[Index] ? (
+                          {this.state.InputDoubleValue[Index] ? (
                             <input
-                              ref={(a) =>
-                                (this[`DataAddValueInputSecond${Index}`] = a)
+                              ref={(Elem) =>
+                                (this[`DataAddValueInputSecond${Index}`] = Elem)
                               }
                               style={{
                                 Width: "100%",
@@ -408,7 +410,11 @@ export default class Statistics extends Component {
                           >
                             <img
                               alt=""
-                              src={this.state.TwoValues[Index] ? Minus : Plus}
+                              src={
+                                this.state.InputDoubleValue[Index]
+                                  ? Minus
+                                  : Plus
+                              }
                               height="100%"
                             ></img>
                           </div>
