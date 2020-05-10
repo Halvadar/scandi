@@ -23,6 +23,7 @@ export default class Post extends Component {
     this.state = {
       post: this.props.FeedItems[parseInt(this.props.match.params.id)],
       postID: parseInt(this.props.match.params.id),
+      ImageValid: false,
     };
     this.SubmitComment = this.SubmitComment.bind(this);
     this.LikeDislike = this.LikeDislike.bind(this);
@@ -57,6 +58,7 @@ export default class Post extends Component {
       this.CommentRef.blur();
     }
   }
+
   LikeDislike(LikeStatus) {
     return () => {
       const PostLikedCopy = this.props.FeedItems[this.state.postID].likedby.map(
@@ -110,15 +112,6 @@ export default class Post extends Component {
 
     return (
       <React.Fragment>
-        <div
-          onClick={() => {
-            this.props.history.push("/feed");
-          }}
-          className="AuthenticationGoBack"
-        >
-          <img src={Arrow} alt="GoBack" className="GoBack"></img>
-        </div>
-
         <div>
           {!localStorage.Feed[postID] || !localStorage.Feed ? (
             <div className="PostNotFound"> Post with given ID doesnt exist</div>

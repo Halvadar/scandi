@@ -18,14 +18,18 @@ export class Feed extends Component {
     super();
     this.state = {
       PreviewWidth: undefined,
+      ImageValid: false,
     };
     this.AddYourPost = this.AddYourPost.bind(this);
+    this.ResizeFunc = this.ResizeFunc.bind(this);
+    this.goToPost = this.goToPost.bind(this);
   }
-  goToPost = (arg) => {
+  goToPost(arg) {
     return () => {
       this.props.history.push(arg);
     };
-  };
+  }
+
   componentDidMount() {
     this.setState({
       PreviewWidth: window
@@ -37,13 +41,13 @@ export class Feed extends Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.ResizeFunc);
   }
-  ResizeFunc = () => {
+  ResizeFunc() {
     this.setState({
       PreviewWidth: window
         .getComputedStyle(this.PreviewRef)
         .getPropertyValue("width"),
     });
-  };
+  }
   AddYourPost() {
     this.props.history.push("/AddNewPost");
   }

@@ -161,15 +161,6 @@ export default class Statistics extends Component {
     return (
       <div className="Statistic">
         <div className="GoBack_LogoCont">
-          <img
-            style={{ left: this.props.DistanceFromRight + 20 + "px" }}
-            onClick={() => {
-              this.props.history.push("/feed");
-            }}
-            src={Arrow}
-            alt="GoBack"
-            className="GoBack"
-          ></img>
           <div className="Logo">
             <div>Statistics</div>
             <img src={statistics} alt="Statistics" className="LogoImg"></img>

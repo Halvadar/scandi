@@ -71,29 +71,24 @@ export default class Authentication extends Component {
           this.setState({ ErrorMessage: "Password Doesnt Match" });
         }
       } else {
-        if (this.ProfilePic.value.length > 0) {
-          localStorage.setItem(
-            "Accounts",
-            JSON.stringify([
-              ...JSON.parse(localStorage.Accounts),
-              {
-                Login: this.Login.value,
-                Password: this.Password.value,
-                Statistics: NewAccStats,
-                Image: this.ProfilePic.value,
-              },
-            ])
-          );
-          this.setState({ ErrorMessage: "" });
-          this.props.SetUser(
-            this.Login.value,
-            NewAccStats,
-            this.ProfilePic.value
-          );
-        } else {
-          this.AuthenticPage.scrollIntoView();
-          this.setState({ ErrorMessage: "Image Is Required For a New User" });
-        }
+        localStorage.setItem(
+          "Accounts",
+          JSON.stringify([
+            ...JSON.parse(localStorage.Accounts),
+            {
+              Login: this.Login.value,
+              Password: this.Password.value,
+              Statistics: NewAccStats,
+              Image: this.ProfilePic.value,
+            },
+          ])
+        );
+        this.setState({ ErrorMessage: "" });
+        this.props.SetUser(
+          this.Login.value,
+          NewAccStats,
+          this.ProfilePic.value
+        );
       }
     }
   }
@@ -101,19 +96,6 @@ export default class Authentication extends Component {
   render() {
     return (
       <React.Fragment>
-        <div
-          onClick={() => {
-            this.props.history.push("/feed");
-          }}
-          className="AuthenticationGoBack"
-        >
-          <img
-            style={{ left: this.props.DistanceFromRight + 10 + "px" }}
-            src={Arrow}
-            alt="GoBack"
-            className="GoBack"
-          ></img>
-        </div>
         <div
           className="AuthenticationContainer"
           ref={(a) => (this.AuthenticPage = a)}
@@ -147,10 +129,7 @@ export default class Authentication extends Component {
                 ></input>
               </div>
               <div className="ProfilePic">
-                <div style={{ marginBottom: "1rem" }}>
-                  {" "}
-                  Not Required if Already registered{" "}
-                </div>
+                <div style={{ marginBottom: "1rem" }}> Not Required</div>
                 <input
                   className="Input"
                   ref={(a) => (this.ProfilePic = a)}

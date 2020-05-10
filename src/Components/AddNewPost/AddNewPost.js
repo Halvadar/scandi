@@ -8,6 +8,7 @@ export default class AddNewPost extends Component {
       Error: "",
     };
     this.SubmitNewPost = this.SubmitNewPost.bind(this);
+    this.ImageValidChecker = this.ImageValidChecker.bind(this);
   }
   componentDidMount() {
     this.ImageRef.addEventListener("keypress", (keypress) => {
@@ -16,20 +17,34 @@ export default class AddNewPost extends Component {
       }
     });
   }
+  async ImageValidChecker(Url) {
+    const ImageStatus = await fetch(Url, {
+      method: "HEAD",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch((err) => false);
 
-  SubmitNewPost() {
-    if (
-      this.ImageRef.value.length > 0 &&
-      this.TitleRef.value.length > 0 &&
-      this.TextRef.value.length > 0
-    ) {
+    return ImageStatus;
+  }
+
+  async SubmitNewPost() {
+    if (this.TitleRef.value.length > 0 && this.TextRef.value.length > 0) {
       if (this.props.LoggedIn) {
+        const ImageValid = await this.ImageValidChecker(this.ImageRef.value);
         const NewFeed = [
           ...this.props.FeedItems,
           {
             title: this.TitleRef.value,
             post: this.TextRef.value,
-            background: this.ImageRef.value,
+            background: ImageValid
+              ? this.ImageRef.value
+              : "https://img.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg?size=626&ext=jpg",
             author: this.props.UserName,
             posted: Date.now().toLocaleString,
             comments: [],
@@ -46,26 +61,13 @@ export default class AddNewPost extends Component {
       }
     } else {
       this.ErrorMessage.scrollIntoView();
-      this.setState({ Error: "Fill All Inputs" });
+      this.setState({ Error: "Fill necessary Inputs" });
     }
   }
 
   render() {
     return (
       <React.Fragment>
-        <div
-          onClick={() => {
-            this.props.history.push("/feed");
-          }}
-          className="AuthenticationGoBack"
-        >
-          <img
-            style={{ left: this.props.DistanceFromRight + 20 + "px" }}
-            src={Arrow}
-            alt="GoBack"
-            className="GoBack"
-          ></img>
-        </div>
         <div className="AddNewPostCont">
           <div className="AddaNewPost"> Add a New Post</div>
           <div ref={(a) => (this.ErrorMessage = a)} className="ErrorMessage">
@@ -86,7 +88,7 @@ export default class AddNewPost extends Component {
             ></textarea>
           </div>
           <div className="AddNewPostImage">
-            <div>Add Background Image URL</div>
+            <div>Add Background Image URL (not required)</div>
             <input ref={(a) => (this.ImageRef = a)}></input>
           </div>
           <div>

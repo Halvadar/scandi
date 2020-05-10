@@ -7,6 +7,7 @@ import Statistics from "./Components/Statistics/Statistics";
 import Authenticate from "./Components/Authentication/Authentication";
 import Post from "./Components/Post/Post";
 import AddNewPost from "./Components/AddNewPost/AddNewPost";
+import Arrow from "./Components/Statistics/Arrow.svg";
 
 class App extends Component {
   constructor() {
@@ -32,6 +33,7 @@ class App extends Component {
     this.SetFeedData = this.SetFeedData.bind(this);
   }
   SetUser(user, data, image) {
+    console.log(image);
     this.setState({
       LoggedIn: true,
       UserName: user,
@@ -143,10 +145,20 @@ class App extends Component {
                   style={{ right: this.state.DistanceFromRight + 20 + "px" }}
                 >
                   <img
+                    onError={() =>
+                      this.setState({
+                        Image:
+                          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1200px-Circle-icons-profile.svg.png",
+                      })
+                    }
                     alt="Profile"
                     onMouseEnter={() => this.setState({ ShowUserName: true })}
                     onMouseLeave={() => this.setState({ ShowUserName: false })}
-                    src={this.state.Image}
+                    src={
+                      this.state.Image.length > 0
+                        ? this.state.Image
+                        : "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1200px-Circle-icons-profile.svg.png"
+                    }
                     className="AbsProfilePic"
                   />
                   <div className="ShowUserName">
@@ -155,6 +167,21 @@ class App extends Component {
                 </div>
               ) : null
             }
+          ></Route>
+          <Route
+            render={(props) => {
+              return props.history.location.pathname !== "/feed" ? (
+                <img
+                  onClick={() => {
+                    props.history.push("/feed");
+                  }}
+                  style={{ left: this.state.DistanceFromRight + 20 + "px" }}
+                  src={Arrow}
+                  alt="GoBack"
+                  className="GoBack"
+                ></img>
+              ) : null;
+            }}
           ></Route>
           <Route render={(props) => <Navbar {...props} />}></Route>
         </Router>
