@@ -61,7 +61,7 @@ export default class AddNewPost extends Component {
       }
     } else {
       this.ErrorMessage.scrollIntoView();
-      this.setState({ Error: "Fill necessary Inputs" });
+      this.setState({ Error: "Fill The Inputs" });
     }
   }
 

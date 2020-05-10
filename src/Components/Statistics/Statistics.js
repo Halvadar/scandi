@@ -72,6 +72,7 @@ export default class Statistics extends Component {
       this.setState({ CanvasHeightWidth: [200, 200] });
     }
     this.state.CurrentMonth &&
+      !this.state.EditMode &&
       this.DiagramFunc(this.state.CurrentMonth, window);
   }
   onHoverAnimation(Index) {

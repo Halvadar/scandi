@@ -48,7 +48,7 @@ export default class Authentication extends Component {
     });
     this.setState({ ErrorMessage: "" });
   }
-  AddNewOrLogin() {
+  async AddNewOrLogin() {
     if (this.Login.value.length > 0 && this.Password.value.length > 0) {
       const FoundAccount = JSON.parse(window.localStorage.Accounts).find(
         (Account) => {
@@ -71,6 +71,7 @@ export default class Authentication extends Component {
           this.setState({ ErrorMessage: "Password Doesnt Match" });
         }
       } else {
+        const ImageValid = await this.ImageValidChecker(this.ProfilePic.value);
         localStorage.setItem(
           "Accounts",
           JSON.stringify([
@@ -79,7 +80,9 @@ export default class Authentication extends Component {
               Login: this.Login.value,
               Password: this.Password.value,
               Statistics: NewAccStats,
-              Image: this.ProfilePic.value,
+              Image: ImageValid
+                ? this.ProfilePic.value
+                : "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1200px-Circle-icons-profile.svg.png",
             },
           ])
         );
@@ -87,10 +90,27 @@ export default class Authentication extends Component {
         this.props.SetUser(
           this.Login.value,
           NewAccStats,
-          this.ProfilePic.value
+          ImageValid
+            ? this.ProfilePic.value
+            : "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1200px-Circle-icons-profile.svg.png"
         );
       }
     }
+  }
+  async ImageValidChecker(Url) {
+    const ImageStatus = await fetch(Url, {
+      method: "HEAD",
+    })
+      .then((res) => {
+        if (res.ok) {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch((err) => false);
+
+    return ImageStatus;
   }
 
   render() {
@@ -121,8 +141,9 @@ export default class Authentication extends Component {
                   placeholder="Login"
                 ></input>
               </div>
-              <div type="password" className="Password">
+              <div className="Password">
                 <input
+                  type="password"
                   className="Input"
                   ref={(a) => (this.Password = a)}
                   placeholder="Password"

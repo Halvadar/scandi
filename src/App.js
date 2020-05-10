@@ -145,20 +145,10 @@ class App extends Component {
                   style={{ right: this.state.DistanceFromRight + 20 + "px" }}
                 >
                   <img
-                    onError={() =>
-                      this.setState({
-                        Image:
-                          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1200px-Circle-icons-profile.svg.png",
-                      })
-                    }
                     alt="Profile"
                     onMouseEnter={() => this.setState({ ShowUserName: true })}
                     onMouseLeave={() => this.setState({ ShowUserName: false })}
-                    src={
-                      this.state.Image.length > 0
-                        ? this.state.Image
-                        : "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1200px-Circle-icons-profile.svg.png"
-                    }
+                    src={this.state.Image}
                     className="AbsProfilePic"
                   />
                   <div className="ShowUserName">
