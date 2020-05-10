@@ -33,7 +33,6 @@ class App extends Component {
     this.SetFeedData = this.SetFeedData.bind(this);
   }
   SetUser(user, data, image) {
-    console.log(image);
     this.setState({
       LoggedIn: true,
       UserName: user,
@@ -149,7 +148,11 @@ class App extends Component {
                 >
                   <img
                     alt="Profile"
+<<<<<<< HEAD
                     onError={() =>
+=======
+                    onError={() => {
+>>>>>>> ecce8b7... Removed Console.log-s
                       this.setState({
                         Image:
                           "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1200px-Circle-icons-profile.svg.png",
