@@ -80,7 +80,7 @@ export class Feed extends Component {
                   FeedItemIndex < 3
                     ? backgrounds[FeedItemIndex]
                     : FeedItem.background
-                })`,
+                }),url('https://img.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg?size=626&ext=jpg')`,
               }}
             >
               <div

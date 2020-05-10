@@ -149,6 +149,12 @@ class App extends Component {
                 >
                   <img
                     alt="Profile"
+                    onError={() =>
+                      this.setState({
+                        Image:
+                          "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1200px-Circle-icons-profile.svg.png",
+                      })
+                    }
                     onMouseEnter={() => this.setState({ ShowUserName: true })}
                     onMouseLeave={() => this.setState({ ShowUserName: false })}
                     src={this.state.Image}

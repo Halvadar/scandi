@@ -120,7 +120,7 @@ export default class Post extends Component {
               style={{
                 backgroundImage: `url(${
                   postID < 3 ? backgrounds[postID] : post.background
-                })`,
+                }),url('https://img.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg?size=626&ext=jpg')`,
               }}
             >
               <div className="UpperPost">

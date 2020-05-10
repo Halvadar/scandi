@@ -97,6 +97,9 @@ export default class Authentication extends Component {
     }
   }
   async ImageValidChecker(Url) {
+    if (Url.length === 0) {
+      return false;
+    }
     const ImageStatus = await fetch(Url, {
       method: "HEAD",
     })
