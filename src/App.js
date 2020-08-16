@@ -12,77 +12,77 @@ import Arrow from "./Components/Statistics/Arrow.svg";
 class App extends Component {
   constructor() {
     super();
-    if (!localStorage) {
-      localStorage.setItem("Feed", JSON.stringify(FeedData));
+    if (!localStorage.feed) {
+      localStorage.setItem("feed", JSON.stringify(FeedData));
     }
 
     this.state = {
-      FeedData: JSON.parse(localStorage.Feed),
-      LocalStorageParsed: undefined,
-      LoggedIn: false,
-      UserName: null,
-      Statistics: null,
-      Image: null,
-      ShowUserName: false,
-      DistanceFromRight: null,
+      parsedFeedData: JSON.parse(localStorage.feed),
+      localStorageParsed: undefined,
+      loggedIn: false,
+      userName: null,
+      statistics: null,
+      image: null,
+      showUserName: false,
+      distanceFromRight: null,
     };
-    this.SetUser = this.SetUser.bind(this);
-    this.LogOut = this.LogOut.bind(this);
-    this.SetStatistics = this.SetStatistics.bind(this);
-    this.SetLocalStorageParsed = this.SetLocalStorageParsed.bind(this);
-    this.SetFeedData = this.SetFeedData.bind(this);
+    this.setUser = this.setUser.bind(this);
+    this.logOut = this.logOut.bind(this);
+    this.setStatistics = this.setStatistics.bind(this);
+    this.setLocalStorageParsed = this.setLocalStorageParsed.bind(this);
+    this.setFeedData = this.setFeedData.bind(this);
   }
-  SetUser(user, data, image) {
+  setUser(user, data, image) {
     this.setState({
-      LoggedIn: true,
-      UserName: user,
-      Statistics: data,
-      Image: image,
+      loggedIn: true,
+      userName: user,
+      statistics: data,
+      image: image,
     });
   }
 
-  LogOut() {
-    this.setState({ LoggedIn: false, UserName: null, Statistics: null });
+  logOut() {
+    this.setState({ loggedIn: false, userName: null, statistics: null });
   }
-  async SetStatistics(stats) {
-    this.setState({ Statistics: stats });
+  async setStatistics(stats) {
+    this.setState({ statistics: stats });
   }
-  SetLocalStorageParsed(LocalStorageParsedValue) {
-    this.setState({ LocalStorageParsed: LocalStorageParsedValue });
+  setLocalStorageParsed(localStorageParsedValue) {
+    this.setState({ localStorageParsed: localStorageParsedValue });
   }
-  async SetFeedData(FeedDataValue) {
-    await this.setState({ FeedData: FeedDataValue });
+  async setFeedData(feedDataValue) {
+    await this.setState({ parsedFeedData: feedDataValue });
   }
 
   componentDidMount() {
     this.setState({
-      DistanceFromRight: this.MainContainer.getBoundingClientRect().left,
+      distanceFromRight: this.mainContainer.getBoundingClientRect().left,
     });
     window.addEventListener("resize", () => {
       this.setState({
-        DistanceFromRight: this.MainContainer.getBoundingClientRect().left,
+        distanceFromRight: this.mainContainer.getBoundingClientRect().left,
       });
     });
   }
   render() {
     return (
       <div
-        ref={(Elem) => (this.MainContainer = Elem)}
-        className="MainContainer"
+        ref={(elem) => (this.mainContainer = elem)}
+        className="mainContainer"
       >
         <Router>
           <Switch>
             <Route
-              path="/AddNewPost"
+              path="/addNewPost"
               render={(props) => {
                 return (
                   <AddNewPost
-                    DistanceFromRight={this.state.DistanceFromRight}
-                    Image={this.state.Image}
-                    LoggedIn={this.state.LoggedIn}
-                    SetFeedData={this.SetFeedData}
-                    UserName={this.state.UserName}
-                    FeedItems={this.state.FeedData}
+                    distanceFromRight={this.state.distanceFromRight}
+                    image={this.state.image}
+                    loggedIn={this.state.loggedIn}
+                    setFeedData={this.setFeedData}
+                    userName={this.state.userName}
+                    feedItems={this.state.parsedFeedData}
                     {...props}
                   />
                 );
@@ -93,12 +93,12 @@ class App extends Component {
               render={(props) => {
                 return (
                   <Post
-                    DistanceFromRight={this.state.DistanceFromRight}
-                    Image={this.state.Image}
-                    UserName={this.state.UserName}
-                    LoggedIn={this.state.LoggedIn}
-                    SetFeedData={this.SetFeedData}
-                    FeedItems={this.state.FeedData}
+                    distanceFromRight={this.state.distanceFromRight}
+                    image={this.state.image}
+                    userName={this.state.userName}
+                    loggedIn={this.state.loggedIn}
+                    setFeedData={this.setFeedData}
+                    feedItems={this.state.parsedFeedData}
                     {...props}
                   />
                 );
@@ -109,12 +109,12 @@ class App extends Component {
               render={(props) => {
                 return (
                   <Authenticate
-                    DistanceFromRight={this.state.DistanceFromRight}
-                    SetLocalStorageParsed={this.SetLocalStorageParsed}
-                    LoggedIn={this.state.LoggedIn}
+                    distanceFromRight={this.state.distanceFromRight}
+                    setLocalStorageParsed={this.setLocalStorageParsed}
+                    loggedIn={this.state.loggedIn}
                     {...props}
-                    SetUser={this.SetUser}
-                    LogOut={this.LogOut}
+                    setUser={this.setUser}
+                    logOut={this.logOut}
                   />
                 );
               }}
@@ -124,8 +124,8 @@ class App extends Component {
               render={(props) => {
                 return (
                   <Statistics
-                    DistanceFromRight={this.state.DistanceFromRight}
-                    SetStatistics={this.SetStatistics}
+                    distanceFromRight={this.state.distanceFromRight}
+                    setStatistics={this.setStatistics}
                     {...this.state}
                     {...props}
                   />
@@ -135,36 +135,34 @@ class App extends Component {
             <Route
               path="/"
               render={(props) => {
-                return <Feed FeedItems={this.state.FeedData} {...props} />;
+                return (
+                  <Feed feedItems={this.state.parsedFeedData} {...props} />
+                );
               }}
             ></Route>
           </Switch>
           <Route
             render={() =>
-              this.state.LoggedIn ? (
+              this.state.loggedIn ? (
                 <div
-                  className="ProfilePicCont"
-                  style={{ right: this.state.DistanceFromRight + 20 + "px" }}
+                  className="profilePicCont"
+                  style={{ right: this.state.distanceFromRight + 20 + "px" }}
                 >
                   <img
                     alt="Profile"
-<<<<<<< HEAD
                     onError={() =>
-=======
-                    onError={() => {
->>>>>>> ecce8b7... Removed Console.log-s
                       this.setState({
-                        Image:
+                        image:
                           "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Circle-icons-profile.svg/1200px-Circle-icons-profile.svg.png",
                       })
                     }
-                    onMouseEnter={() => this.setState({ ShowUserName: true })}
-                    onMouseLeave={() => this.setState({ ShowUserName: false })}
-                    src={this.state.Image}
-                    className="AbsProfilePic"
+                    onMouseEnter={() => this.setState({ showUserName: true })}
+                    onMouseLeave={() => this.setState({ showUserName: false })}
+                    src={this.state.image}
+                    className="absProfilePic"
                   />
-                  <div className="ShowUserName">
-                    {this.state.ShowUserName ? this.state.UserName : null}
+                  <div className="showUserName">
+                    {this.state.showUserName ? this.state.userName : null}
                   </div>
                 </div>
               ) : null
@@ -177,10 +175,10 @@ class App extends Component {
                   onClick={() => {
                     props.history.push("/feed");
                   }}
-                  style={{ left: this.state.DistanceFromRight + 20 + "px" }}
+                  style={{ left: this.state.distanceFromRight + 20 + "px" }}
                   src={Arrow}
                   alt="GoBack"
-                  className="GoBack"
+                  className="goBack"
                 ></img>
               ) : null;
             }}

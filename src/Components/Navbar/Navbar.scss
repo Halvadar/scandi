@@ -1,4 +1,4 @@
-.Navbar {
+.navbar {
   display: flex;
   justify-content: space-between;
   background: #1d1f2b;
@@ -10,22 +10,22 @@
   z-index: 5;
 }
 
-.NavItem {
+.navItem {
   height: 100%;
   width: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.NavItem:hover {
+.navItem:hover {
   cursor: pointer;
 }
-.NavImg {
+.navImg {
   height: 50%;
   width: 50%;
 }
 @media only screen and(min-width:500px) {
-  .Navbar {
+  .navbar {
     height: 4rem;
   }
 }

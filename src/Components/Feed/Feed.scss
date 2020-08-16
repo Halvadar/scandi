@@ -8,14 +8,14 @@ body {
   position: relative;
   padding-bottom: 8rem;
 }
-.MainContainer {
+.mainContainer {
   background: #161823;
   min-height: 100vh;
   max-height: max-content;
   position: relative;
 }
 
-.Title {
+.title {
   z-index: 1;
   color: rgb(216, 216, 216);
   font-size: 1.5rem;
@@ -26,7 +26,7 @@ body {
   box-sizing: border-box;
   margin-top: 70%;
 }
-.Preview {
+.preview {
   position: relative;
   z-index: 5;
   padding-top: 2%;
@@ -42,13 +42,13 @@ body {
   height: 7rem;
   box-sizing: border-box;
 }
-.PreviewContent {
+.previewContent {
   height: 100%;
 }
-.TitleFeed:hover {
+.titleFeed:hover {
   color: rgb(170, 242, 255) !important;
 }
-.LinearGrad {
+.linearGrad {
   top: 65%;
   position: absolute;
   height: 15rem;
@@ -66,23 +66,23 @@ body {
   body {
     padding-bottom: 4rem;
   }
-  .Title {
+  .title {
     padding: 0 25% 0 5%;
     font-size: 2.5rem;
   }
-  .LinearGrad {
+  .linearGrad {
     width: 120%;
     left: -10%;
   }
-  .Preview {
+  .preview {
     font-size: 30px;
   }
 }
-.FeedContainer {
+.feedContainer {
   @extend %FlexColumn;
   width: 100%;
 }
-.FeedItem {
+.feedItem {
   position: relative;
   width: 100%;
   background-position: center top;
@@ -92,16 +92,16 @@ body {
   border-bottom: 4rem solid rgb(229, 229, 255);
 }
 
-.Upper {
+.upper {
   @extend %FlexColumn;
   position: relative;
   align-items: center;
 }
-.Upper:hover {
+.upper:hover {
   cursor: pointer;
 }
 
-.Lower {
+.lower {
   position: relative;
   padding: 0 5% 0 5%;
   box-sizing: border-box;
@@ -110,7 +110,7 @@ body {
   height: max-content;
 }
 
-.AuthorDate {
+.authorDate {
   padding-top: 5%;
   display: flex;
   justify-content: space-between;
@@ -118,14 +118,14 @@ body {
   color: rgb(190, 190, 190);
   font-size: 1.2rem;
 }
-.Name {
+.name {
   color: rgb(226, 226, 226);
 }
-.Date {
+.date {
   color: rgb(226, 226, 226);
 }
 
-.Likes {
+.likes {
   display: flex;
   padding-top: 5%;
   align-items: center;
@@ -133,18 +133,18 @@ body {
   justify-content: space-between;
   flex-wrap: wrap;
 }
-.LikedBy {
+.likedBy {
   display: flex;
   align-items: center;
 }
-.LikeImages {
+.likeImages {
   height: 30px;
   width: 30px;
   border-radius: 50%;
   margin: 7px;
 }
 
-.LikeCount {
+.likeCount {
   background-color: #fd51d9;
   border-radius: 30%/50%;
   padding: 3px 5px;
@@ -154,6 +154,6 @@ body {
   display: flex;
   justify-content: center;
 }
-.LikedThis {
+.likedThis {
   color: rgb(145, 145, 145);
 }

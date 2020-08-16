@@ -1,178 +1,184 @@
 import React, { Component } from "react";
 import "./Statistics.scss";
-import statistics from "../Navbar/statistics.svg";
+import StatisticsImage from "../Navbar/Statistics.svg";
 import * as Functions from "./Functions";
 import Plus from "./Plus.svg";
-import Minus from "./minus.svg";
+import Minus from "./Minus.svg";
 import PlusData from "./PlusData.svg";
 import Income from "./Income.svg";
 import Expense from "./Expense.svg";
-const AnimationArrCopy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+const animationArrCopy = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 export default class Statistics extends Component {
   constructor() {
     super();
     this.state = {
-      ChartXYPositions: [],
-      InfoIndex: [],
-      CurrentData: null,
-      CurrentMonth: null,
-      ParsedStatistics: null,
-      MonthsScrollPosition: 0,
-      CanvasHeightWidth: [200, 200],
-      InputDoubleValue: [false],
-      DataAddValueContWidth: undefined,
-      DataEntryAmount: 1,
-      EditMode: false,
-      MonthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      Errors: "",
-      IncomeInputValue: "",
-      InputValues: [{ name: "", value1: "", value2: "" }],
+      chartXYPositions: [],
+      infoIndex: [],
+      currentData: null,
+      currentMonth: null,
+      parsedStatistics: null,
+      monthsScrollPosition: 0,
+      canvasHeightWidth: [200, 200],
+      inputDoubleValue: [false],
+      dataAddValueContWidth: undefined,
+      dataEntryAmount: 1,
+      editMode: false,
+      monthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      errors: "",
+      incomeInputValue: "",
+      inputValues: [{ name: "", value1: "", value2: "" }],
     };
-    this.DiagramFunc = Functions.DiagramFunc.bind(this);
-    this.DiagramInfoOnClick = Functions.DiagramInfoOnClick.bind(this);
-    this.SubmitData = Functions.SubmitData.bind(this);
-    this.AddAnotherDataEntry = Functions.AddAnotherDataEntry.bind(this);
-    this.TwoValuesSetter = Functions.TwoValuesSetter.bind(this);
-    this.DataAddValueContWidthSetter = Functions.DataAddValueContWidthSetter.bind(
+    this.diagramFunc = Functions.diagramFunc.bind(this);
+    this.diagramInfoOnClick = Functions.diagramInfoOnClick.bind(this);
+    this.submitData = Functions.submitData.bind(this);
+    this.addAnotherDataEntry = Functions.addAnotherDataEntry.bind(this);
+    this.twoValuesSetter = Functions.twoValuesSetter.bind(this);
+    this.dataAddValueContWidthSetter = Functions.dataAddValueContWidthSetter.bind(
       this
     );
-    this.ChangeCurrentMonthData = Functions.ChangeCurrentMonthData.bind(this);
-    this.DeleteEntireDataEntry = Functions.DeleteEntireDataEntry.bind(this);
-    this.IncomeInfoClass = Functions.IncomeInfoClass.bind(this);
-    this.ResizeFunc = this.ResizeFunc.bind(this);
+    this.changeCurrentMonthData = Functions.changeCurrentMonthData.bind(this);
+    this.deleteEntireDataEntry = Functions.deleteEntireDataEntry.bind(this);
+    this.incomeInfoClass = Functions.incomeInfoClass.bind(this);
+    this.resizeFunc = this.resizeFunc.bind(this);
     this.onHoverAnimation = this.onHoverAnimation.bind(this);
-    this.OnLeave = this.OnLeave.bind(this);
-    this.InputValueSetter = this.InputValueSetter.bind(this);
+    this.onLeave = this.onLeave.bind(this);
+    this.inputValueSetter = this.inputValueSetter.bind(this);
 
-    this.Interval = undefined;
+    this.interval = undefined;
   }
 
   componentDidMount() {
     if (window.screen.width > 500) {
-      this.setState({ CanvasHeightWidth: [300, 450] });
+      this.setState({ canvasHeightWidth: [300, 450] });
     }
 
-    if (this.props.LoggedIn) {
-      this.DiagramFunc(this.props.Statistics[0], window);
+    if (this.props.loggedIn) {
+      this.diagramFunc(this.props.statistics[0], window);
     }
 
-    window.addEventListener("resize", this.ResizeFunc);
+    window.addEventListener("resize", this.resizeFunc);
   }
+
   componentWillUnmount() {
-    window.removeEventListener("resize", this.ResizeFunc);
-    clearInterval(this.Interval);
+    window.removeEventListener("resize", this.resizeFunc);
+    clearInterval(this.interval);
   }
-  ResizeFunc() {
-    if (window.screen.width > 500) {
-      this.setState({ CanvasHeightWidth: [300, 450] });
-    } else {
-      this.setState({ CanvasHeightWidth: [200, 200] });
-    }
-    this.state.CurrentMonth &&
-      !this.state.EditMode &&
-      this.DiagramFunc(this.state.CurrentMonth, window);
-  }
-  onHoverAnimation(Index) {
-    return () => {
-      this.setState({ MonthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
 
-      this.Interval = setInterval(() => {
-        if (this.state.MonthAnimations[Index] < 10) {
-          const AnimatedArr = AnimationArrCopy.map((Item, ItemIndex) =>
-            Index === ItemIndex ? this.state.MonthAnimations[Index] + 1 : Item
+  resizeFunc() {
+    if (window.screen.width > 500) {
+      this.setState({ canvasHeightWidth: [300, 450] });
+    } else {
+      this.setState({ canvasHeightWidth: [200, 200] });
+    }
+    this.state.currentMonth &&
+      !this.state.editMode &&
+      this.diagramFunc(this.state.currentMonth, window);
+  }
+  onHoverAnimation(index) {
+    return () => {
+      this.setState({ monthAnimations: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] });
+
+      this.interval = setInterval(() => {
+        if (this.state.monthAnimations[index] < 10) {
+          const animatedArr = animationArrCopy.map((item, itemIndex) =>
+            index === itemIndex ? this.state.monthAnimations[index] + 1 : item
           );
 
-          this.setState({ MonthAnimations: AnimatedArr });
+          this.setState({ monthAnimations: animatedArr });
         } else {
-          clearInterval(this.Interval);
+          clearInterval(this.interval);
         }
       }, 10);
     };
   }
-  OnLeave(Index) {
+  onLeave(index) {
     return () => {
-      const AnimationArrCopy = [...this.state.MonthAnimations];
-      AnimationArrCopy[Index] = 0;
-      this.setState({ MonthAnimations: AnimationArrCopy });
-      clearInterval(this.Interval);
+      const animationArrCopy = [...this.state.monthAnimations];
+      animationArrCopy[index] = 0;
+      this.setState({ monthAnimations: animationArrCopy });
+      clearInterval(this.interval);
     };
   }
 
-  InputValueSetter(Type, Index) {
+  inputValueSetter(Type, index) {
     return () => {
-      this.setState((PrevState) => {
+      this.setState((prevState) => {
         if (Type === "Income") {
-          return { IncomeInputValue: this.IncomeInput.value };
+          return { incomeInputValue: this.incomeInput.value };
         }
-        const NewInputValues = PrevState.InputValues.map(
-          (Item, ObjectIndex) => {
-            if (Index === ObjectIndex) {
-              const TypeValue =
+        const newInputValues = prevState.inputValues.map(
+          (item, objectIndex) => {
+            if (index === objectIndex) {
+              const typeValue =
                 Type === "name"
-                  ? { name: this[`DataAddNameInput${Index}`].value }
+                  ? { name: this[`dataAddNameInput${index}`].value }
                   : Type === "value1"
-                  ? { value1: this[`DataAddValueInput${Index}`].value }
+                  ? { value1: this[`dataAddValueInput${index}`].value }
                   : Type === "value2"
                   ? {
-                      value2: this[`DataAddValueInputSecond${Index}`].value,
+                      value2: this[`dataAddValueInputSecond${index}`].value,
                     }
                   : undefined;
 
-              const ThisInputsCopy = {
-                ...PrevState.InputValues[Index],
-                ...TypeValue,
+              const thisInputsCopy = {
+                ...prevState.inputValues[index],
+                ...typeValue,
               };
-              return ThisInputsCopy;
+              return thisInputsCopy;
             }
-            return Item;
+            return item;
           }
         );
-        return { InputValues: NewInputValues };
+        return { inputValues: newInputValues };
       });
     };
   }
   render() {
-    const CurrentData = this.state.CurrentData && [
-      this.state.CurrentData.data.reduce(
-        (Accumulator, CurrentValue) => Accumulator + CurrentValue,
+    const currentData = this.state.currentData && [
+      this.state.currentData.data.reduce(
+        (accumulator, currentValue) => accumulator + currentValue,
         0
       ),
-      this.state.CurrentData.name,
+      this.state.currentData.name,
     ];
-    const TotalSpent =
-      this.state.CurrentMonth &&
-      this.state.CurrentMonth.data.reduce((Total, ObjectValue) => {
+    const totalSpent =
+      this.state.currentMonth &&
+      this.state.currentMonth.data.reduce((Total, objectValue) => {
         return (
           Total +
-          ObjectValue.data.reduce(
-            (ItemTotal, ItemValue) => ItemTotal + ItemValue,
+          objectValue.data.reduce(
+            (itemTotal, itemValue) => itemTotal + itemValue,
             0
           )
         );
       }, 0);
 
-    const IncomeInfo =
-      this.state.CurrentMonth &&
-      this.state.CurrentMonth.income &&
-      new this.IncomeInfoClass(this, TotalSpent);
+    const incomeInfo =
+      this.state.currentMonth &&
+      this.state.currentMonth.income &&
+      new this.incomeInfoClass(this, totalSpent);
 
     return (
-      <div className="Statistic">
-        <div className="GoBack_LogoCont">
-          <div className="Logo">
+      <div className="statistic">
+        <div className="goBack_LogoCont">
+          <div className="logo">
             <div>Statistics</div>
-            <img src={statistics} alt="Statistics" className="LogoImg"></img>
+            <img
+              src={StatisticsImage}
+              alt="Statistics"
+              className="logoImg"
+            ></img>
           </div>
         </div>
-        {this.props.LoggedIn ? (
+        {this.props.loggedIn ? (
           <React.Fragment>
             <div
-              className="MonthsContainer"
-              ref={(Elem) => (this.MonthsScrollBar = Elem)}
+              className="monthsContainer"
+              ref={(elem) => (this.monthsScrollBar = elem)}
             >
-              {this.state.CurrentMonth ? (
-                <div ref={(Elem) => (this.Months = Elem)} className="Months">
+              {this.state.currentMonth ? (
+                <div ref={(elem) => (this.months = elem)} className="months">
                   {[
                     "January",
                     "February",
@@ -186,116 +192,116 @@ export default class Statistics extends Component {
                     "October",
                     "November",
                     "December",
-                  ].map((MonthName, Index) => {
+                  ].map((monthName, index) => {
                     return (
                       <div
-                        key={Index}
-                        ref={(Elem) => (this[MonthName] = Elem)}
+                        key={index}
+                        ref={(elem) => (this[monthName] = elem)}
                         style={{
                           background:
-                            this.state.CurrentMonth.month === MonthName
+                            this.state.currentMonth.month === monthName
                               ? "rgb(53, 124, 255)"
                               : null,
-                          bottom: this.state.MonthAnimations[Index] + "px",
+                          bottom: this.state.monthAnimations[index] + "px",
                         }}
                         onClick={() =>
-                          this.DiagramFunc(this.props.Statistics[Index], window)
+                          this.diagramFunc(this.props.statistics[index], window)
                         }
-                        className="Month"
-                        onMouseEnter={this.onHoverAnimation(Index)}
-                        onMouseLeave={this.OnLeave(Index)}
+                        className="month"
+                        onMouseEnter={this.onHoverAnimation(index)}
+                        onMouseLeave={this.onLeave(index)}
                       >
-                        {MonthName}
+                        {monthName}
                       </div>
                     );
                   })}
                 </div>
               ) : null}
             </div>
-            {!this.state.EditMode &&
-            this.state.CurrentMonth &&
-            this.state.CurrentMonth.data.length > 0 ? (
+            {!this.state.editMode &&
+            this.state.currentMonth &&
+            this.state.currentMonth.data.length > 0 ? (
               <React.Fragment>
-                <div className="ChangeDataEntries">
+                <div className="changeDataEntries">
                   <button
-                    onClick={this.ChangeCurrentMonthData}
-                    className="ChangeDataEntriesButton"
+                    onClick={this.changeCurrentMonthData}
+                    className="changeDataEntriesButton"
                   >
                     Change Data
                   </button>
                 </div>
-                <div className="Chart" style={{ position: "relative" }}>
+                <div className="chart" style={{ position: "relative" }}>
                   <canvas
-                    height={this.state.CanvasHeightWidth[0] + "px"}
-                    width={this.state.CanvasHeightWidth[1] + "px"}
-                    ref={(Elem) => (this.Diagram = Elem)}
-                    className="Diagram"
+                    height={this.state.canvasHeightWidth[0] + "px"}
+                    width={this.state.canvasHeightWidth[1] + "px"}
+                    ref={(elem) => (this.diagram = elem)}
+                    className="diagram"
                   ></canvas>
-                  {this.state.ChartXYPositions.length > 0 &&
-                  this.state.CurrentMonth.data
-                    ? this.state.ChartXYPositions.map((Value, Index) => {
+                  {this.state.chartXYPositions.length > 0 &&
+                  this.state.currentMonth.data
+                    ? this.state.chartXYPositions.map((value, index) => {
                         return (
                           <div
-                            key={Index}
-                            onClick={this.DiagramInfoOnClick(
-                              Index,
-                              this.state.CurrentMonth.data
+                            key={index}
+                            onClick={this.diagramInfoOnClick(
+                              index,
+                              this.state.currentMonth.data
                             )}
-                            className="DiagramClickInfo"
+                            className="diagramClickInfo"
                             style={{
                               left:
-                                this.state.ChartXYPositions[Index]
-                                  .LinearGradXEnd -
+                                this.state.chartXYPositions[index]
+                                  .linearGradXEnd -
                                 7.5 +
                                 "px",
                               top:
-                                this.state.ChartXYPositions[Index]
-                                  .LinearGradYEnd -
+                                this.state.chartXYPositions[index]
+                                  .linearGradYEnd -
                                 7.5 +
                                 "px",
-                              background: this.state.InfoIndex[Index],
+                              background: this.state.infoIndex[index],
                             }}
                           >
-                            <div className="DiagramClickInside"></div>
+                            <div className="diagramClickInside"></div>
                           </div>
                         );
                       })
                     : null}
-                  <div className="CenterBalance">
-                    <div className="BalanceNumber">
+                  <div className="centerBalance">
+                    <div className="balanceNumber">
                       $
-                      {IncomeInfo.Balance < 0 && IncomeInfo.Balance > -1 && "-"}
-                      {this.state.CurrentMonth && IncomeInfo.BalanceFloored}
-                      <div className="DecimalPortion">
-                        {this.state.CurrentMonth && IncomeInfo.DecimalPart}
+                      {incomeInfo.balance < 0 && incomeInfo.balance > -1 && "-"}
+                      {this.state.currentMonth && incomeInfo.balanceFloored}
+                      <div className="decimalPortion">
+                        {this.state.currentMonth && incomeInfo.decimalPart}
                       </div>
                     </div>
-                    <div className="Balance">Balance</div>
+                    <div className="balance">Balance</div>
                   </div>
                 </div>
-                <div className="DataInfoCont">
-                  <div className="DataInfo">
-                    <div className="DataAmount">
-                      {CurrentData && `$${CurrentData[0]}`}
+                <div className="dataInfoCont">
+                  <div className="dataInfo">
+                    <div className="dataAmount">
+                      {currentData && `$${currentData[0]}`}
                     </div>
-                    <div className="DataName">
-                      {CurrentData && CurrentData[1]}
+                    <div className="dataName">
+                      {currentData && currentData[1]}
                     </div>
                   </div>
                 </div>
-                <div className="IncomeExpense">
-                  <div className="Income">
+                <div className="incomeExpense">
+                  <div className="income">
                     +$
-                    {this.state.CurrentMonth && IncomeInfo.IncomeFloored}
-                    <div className="DecimalPortionIncomeExpense">
-                      {this.state.CurrentMonth && IncomeInfo.IncomeDecimal}
-                      <img alt="Income" src={Income}></img>
+                    {this.state.currentMonth && incomeInfo.incomeFloored}
+                    <div className="decimalPortionIncomeExpense">
+                      {this.state.currentMonth && incomeInfo.incomeDecimal}
+                      <img alt="income" src={Income}></img>
                     </div>
                   </div>
-                  <div className="Expense">
-                    -${this.state.CurrentMonth && IncomeInfo.ExpenseFloored}
-                    <div className="DecimalPortionIncomeExpense">
-                      {this.state.CurrentMonth && IncomeInfo.ExpenseDecimal}
+                  <div className="expense">
+                    -${this.state.currentMonth && incomeInfo.expenseFloored}
+                    <div className="decimalPortionIncomeExpense">
+                      {this.state.currentMonth && incomeInfo.expenseDecimal}
                       <img alt="Expense" src={Expense}></img>
                     </div>
                   </div>
@@ -303,41 +309,41 @@ export default class Statistics extends Component {
               </React.Fragment>
             ) : (
               <div
-                className="AddData"
-                onKeyPress={(KeyPress) => {
-                  if (KeyPress.key === "Enter") {
-                    this.SubmitData();
+                className="addData"
+                onKeyPress={(keyPress) => {
+                  if (keyPress.key === "Enter") {
+                    this.submitData();
                   }
                 }}
               >
-                <div className="ErrorMessage">{this.state.Errors}</div>
-                <div className="IncomeInputCont">
+                <div className="errorMessage">{this.state.errors}</div>
+                <div className="incomeInputCont">
                   <div style={{ margin: "1rem" }}>
                     Add Your Income For This Month
                   </div>
                   <input
-                    ref={(Elem) => (this.IncomeInput = Elem)}
-                    className="IncomeInput"
+                    ref={(elem) => (this.incomeInput = elem)}
+                    className="incomeInput"
                     step="0.01"
                     type="number"
-                    onChange={this.InputValueSetter("Income")}
+                    onChange={this.inputValueSetter("Income")}
                     placeholder="$"
-                    value={this.state.IncomeInputValue}
+                    value={this.state.incomeInputValue}
                   ></input>
                 </div>
-                <div className="AddYourSpendings">
+                <div className="addYourSpendings">
                   <div style={{ margin: "1rem" }}>Add Your Spendings</div>
                 </div>
-                {this.state.InputDoubleValue.map((Value, Index) => {
+                {this.state.inputDoubleValue.map((value, index) => {
                   return (
                     <React.Fragment>
-                      <div key={Index} className="DataAddCont">
-                        {Index !== 0 ? (
+                      <div key={index} className="dataAddCont">
+                        {index !== 0 ? (
                           <div
                             onClick={() => {
-                              this.DeleteEntireDataEntry(Index);
+                              this.deleteEntireDataEntry(index);
                             }}
-                            className="DeleteDataEntry"
+                            className="deleteDataEntry"
                           >
                             <img
                               alt="Minus"
@@ -347,71 +353,71 @@ export default class Statistics extends Component {
                             ></img>
                           </div>
                         ) : null}
-                        <div className="DataAddNameCont">
+                        <div className="dataAddNameCont">
                           Name
                           <input
-                            value={this.state.InputValues[Index].name}
-                            onChange={this.InputValueSetter("name", Index)}
-                            className="DataAddNameInput"
-                            ref={(Elem) =>
-                              (this[`DataAddNameInput${Index}`] = Elem)
+                            value={this.state.inputValues[index].name}
+                            onChange={this.inputValueSetter("name", index)}
+                            className="dataAddNameInput"
+                            ref={(elem) =>
+                              (this[`dataAddNameInput${index}`] = elem)
                             }
                           ></input>
                         </div>
                         <div
-                          className="DataAddNameCont DataAddValueCont"
-                          ref={(Elem) => {
-                            if (Index === 0) {
-                              this.DataAddValueContWidthSetter(Elem, Index);
+                          className="dataAddNameCont dataAddValueCont"
+                          ref={(elem) => {
+                            if (index === 0) {
+                              this.dataAddValueContWidthSetter(elem, index);
                             }
                           }}
                         >
                           Spent
                           <input
-                            ref={(Elem) =>
-                              (this[`DataAddValueInput${Index}`] = Elem)
+                            ref={(elem) =>
+                              (this[`dataAddValueInput${index}`] = elem)
                             }
                             style={{
                               Width: "100%",
-                              maxWidth: this.state.InputDoubleValue[Index]
-                                ? this.state.DataAddValueContWidth / 2 + "px"
+                              maxWidth: this.state.inputDoubleValue[index]
+                                ? this.state.dataAddValueContWidth / 2 + "px"
                                 : null,
                             }}
-                            value={this.state.InputValues[Index].value1}
-                            onChange={this.InputValueSetter("value1", Index)}
+                            value={this.state.inputValues[index].value1}
+                            onChange={this.inputValueSetter("value1", index)}
                             step="0.01"
                             type="number"
                             placeholder="$"
-                            className="DataAddNameInput DataAddValueInput "
+                            className="dataAddNameInput dataAddValueInput "
                           ></input>
-                          {this.state.InputDoubleValue[Index] ? (
+                          {this.state.inputDoubleValue[index] ? (
                             <input
-                              ref={(Elem) =>
-                                (this[`DataAddValueInputSecond${Index}`] = Elem)
+                              ref={(elem) =>
+                                (this[`dataAddValueInputSecond${index}`] = elem)
                               }
                               style={{
                                 Width: "100%",
                                 maxWidth:
-                                  this.state.DataAddValueContWidth / 2 + "px",
+                                  this.state.dataAddValueContWidth / 2 + "px",
                               }}
-                              value={this.state.InputValues[Index].value2}
-                              onChange={this.InputValueSetter("value2", Index)}
+                              value={this.state.inputValues[index].value2}
+                              onChange={this.inputValueSetter("value2", index)}
                               step="0.01"
                               type="number"
                               placeholder="$"
-                              className="DataAddNameInput DataAddValueInput "
+                              className="dataAddNameInput dataAddValueInput "
                             ></input>
                           ) : null}
                           <div
-                            className="AddAnotherValue"
+                            className="addAnotherValue"
                             onClick={() => {
-                              this.TwoValuesSetter(Index);
+                              this.twoValuesSetter(index);
                             }}
                           >
                             <img
                               alt=""
                               src={
-                                this.state.InputDoubleValue[Index]
+                                this.state.inputDoubleValue[index]
                                   ? Minus
                                   : Plus
                               }
@@ -424,8 +430,8 @@ export default class Statistics extends Component {
                   );
                 })}
                 <div
-                  className="AddAnotherMonthData"
-                  onClick={this.AddAnotherDataEntry}
+                  className="addAnotherMonthData"
+                  onClick={this.addAnotherDataEntry}
                 >
                   <img
                     alt="AddAnother"
@@ -434,10 +440,10 @@ export default class Statistics extends Component {
                     width="40px"
                   ></img>
                 </div>
-                <div className="Submit">
+                <div className="submit">
                   <button
-                    onClick={this.SubmitData}
-                    className="SubmitButton"
+                    onClick={this.submitData}
+                    className="submitButton"
                     placeholder="Submit"
                   >
                     Submit
@@ -447,7 +453,7 @@ export default class Statistics extends Component {
             )}
           </React.Fragment>
         ) : (
-          <div className="YouNeedToSignIn">
+          <div className="youNeedToSignIn">
             You need To be Signed In to view this page
           </div>
         )}

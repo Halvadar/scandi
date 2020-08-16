@@ -7,20 +7,20 @@ export default class AddNewPost extends Component {
       error: "",
     };
     this.submitNewPost = this.submitNewPost.bind(this);
-    this.ImageValidChecker = this.ImageValidChecker.bind(this);
+    this.imageValidChecker = this.imageValidChecker.bind(this);
   }
   componentDidMount() {
-    this.ImageRef.addEventListener("keypress", (keypress) => {
+    this.imageRef.addEventListener("keypress", (keypress) => {
       if (keypress.key === "Enter") {
         this.submitNewPost();
       }
     });
   }
-  async ImageValidChecker(Url) {
-    if (Url.length === 0) {
+  async imageValidChecker(url) {
+    if (url.length === 0) {
       return false;
     }
-    const ImageStatus = await fetch(Url, {
+    const imageStatus = await fetch(url, {
       method: "HEAD",
     })
       .then((res) => {
@@ -32,37 +32,37 @@ export default class AddNewPost extends Component {
       })
       .catch((err) => false);
 
-    return ImageStatus;
+    return imageStatus;
   }
 
   async submitNewPost() {
-    if (this.TitleRef.value.length > 0 && this.TextRef.value.length > 0) {
-      if (this.props.LoggedIn) {
-        const ImageValid = await this.ImageValidChecker(this.ImageRef.value);
-        const NewFeed = [
-          ...this.props.FeedItems,
+    if (this.titleRef.value.length > 0 && this.textRef.value.length > 0) {
+      if (this.props.loggedIn) {
+        const imageValid = await this.imageValidChecker(this.imageRef.value);
+        const newFeed = [
+          ...this.props.feedItems,
           {
-            title: this.TitleRef.value,
-            post: this.TextRef.value,
-            background: ImageValid
-              ? this.ImageRef.value
+            title: this.titleRef.value,
+            post: this.textRef.value,
+            background: imageValid
+              ? this.imageRef.value
               : "https://img.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg?size=626&ext=jpg",
-            author: this.props.UserName,
+            author: this.props.userName,
             posted: Date.now().toLocaleString,
             comments: [],
             likedby: [],
           },
         ];
-        localStorage.setItem("Feed", JSON.stringify(NewFeed));
+        localStorage.setItem("Feed", JSON.stringify(newFeed));
         this.setState({ error: "" });
-        this.props.SetFeedData(NewFeed);
+        this.props.setFeedData(newFeed);
         this.props.history.push("/feed");
       } else {
-        this.ErrorMessage.scrollIntoView();
+        this.errorMessage.scrollIntoView();
         this.setState({ error: "You need to Log in" });
       }
     } else {
-      this.ErrorMessage.scrollIntoView();
+      this.errorMessage.scrollIntoView();
       this.setState({ error: "Fill The Inputs" });
     }
   }
@@ -70,37 +70,37 @@ export default class AddNewPost extends Component {
   render() {
     return (
       <React.Fragment>
-        <div className="AddNewPostCont">
-          <div className="AddaNewPost"> Add a New Post</div>
+        <div className="addNewPostCont">
+          <div className="addaNewPost"> Add a New Post</div>
           <div
-            ref={(Elem) => (this.ErrorMessage = Elem)}
-            className="ErrorMessage"
+            ref={(elem) => (this.errorMessage = elem)}
+            className="errorMessage"
           >
             {this.state.error}
           </div>
-          <div className="AddTitle">
+          <div className="addTitle">
             <div>Title</div>
             <input
-              ref={(Elem) => (this.TitleRef = Elem)}
-              className="AddNewPostTitleInput"
+              ref={(elem) => (this.titleRef = elem)}
+              className="addNewPostTitleInput"
             ></input>
           </div>
-          <div className="AddText">
+          <div className="addText">
             <div>Text</div>
             <textarea
-              ref={(Elem) => (this.TextRef = Elem)}
-              className="AddNewPostTextInput"
+              ref={(elem) => (this.textRef = elem)}
+              className="addNewPostTextInput"
             ></textarea>
           </div>
-          <div className="AddNewPostImage">
+          <div className="addNewPostImage">
             <div>Add Background Image URL (not required)</div>
-            <input ref={(Elem) => (this.ImageRef = Elem)}></input>
+            <input ref={(elem) => (this.imageRef = elem)}></input>
           </div>
           <div>
             <button
               onClick={this.submitNewPost}
-              ref={(Elem) => (this.SubmitRef = Elem)}
-              className="AddNewPostSubmit"
+              ref={(elem) => (this.submitRef = elem)}
+              className="addNewPostSubmit"
             >
               Submit
             </button>

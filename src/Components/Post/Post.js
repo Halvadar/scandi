@@ -1,101 +1,101 @@
 import React, { Component } from "react";
 import "./Post.scss";
-import image0 from "../Feed/image0.png";
-import image1 from "../Feed/image1.png";
-import image2 from "../Feed/image2.png";
-import image3 from "../Feed/image3.png";
-import image4 from "../Feed/image4.png";
-import image5 from "../Feed/image5.png";
-import background0 from "../Feed/Background0.jpg";
-import background1 from "../Feed/Background1.jpg";
-import background2 from "../Feed/Background2.jpg";
-import like from "./like.svg";
-import dislike from "./dislike.svg";
+import Image0 from "../Feed/Image0.png";
+import Image1 from "../Feed/Image1.png";
+import Image2 from "../Feed/Image2.png";
+import Image3 from "../Feed/Image3.png";
+import Image4 from "../Feed/Image4.png";
+import Image5 from "../Feed/Image5.png";
+import Background0 from "../Feed/Background0.jpg";
+import Background1 from "../Feed/Background1.jpg";
+import Background2 from "../Feed/Background2.jpg";
+import Like from "./Like.svg";
+import Dislike from "./Dislike.svg";
 
-const backgrounds = [background0, background1, background2];
-const images = [image0, image1, image2, image3, image4, image5];
+const backgrounds = [Background0, Background1, Background2];
+const images = [Image0, Image1, Image2, Image3, Image4, Image5];
 
 export default class Post extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      post: this.props.FeedItems[parseInt(this.props.match.params.id)],
+      post: this.props.feedItems[parseInt(this.props.match.params.id)],
       postID: parseInt(this.props.match.params.id),
-      ImageValid: false,
+      imageValid: false,
     };
-    this.SubmitComment = this.SubmitComment.bind(this);
-    this.LikeDislike = this.LikeDislike.bind(this);
+    this.submitComment = this.submitComment.bind(this);
+    this.likeDislike = this.likeDislike.bind(this);
   }
 
   componentDidMount() {
-    this.props.LoggedIn &&
-      this.CommentRef.addEventListener("keypress", (keypress) => {
+    this.props.loggedIn &&
+      this.commentRef.addEventListener("keypress", (keypress) => {
         if (keypress.key === "Enter") {
-          this.SubmitComment();
+          this.submitComment();
         }
       });
   }
-  async SubmitComment() {
-    const FeedItemsCopy = this.props.FeedItems.map((FeedItem, Index) => {
-      if (Index === this.state.postID) {
-        const NewComments = [
-          ...FeedItem.comments,
-          { comment: this.CommentRef.value, author: this.props.UserName },
+  async submitComment() {
+    const feedItemsCopy = this.props.feedItems.map((feedItem, index) => {
+      if (index === this.state.postID) {
+        const newComments = [
+          ...feedItem.comments,
+          { comment: this.commentRef.value, author: this.props.userName },
         ];
-        const NewItem = { ...FeedItem, comments: NewComments };
-        return NewItem;
+        const newItem = { ...feedItem, comments: newComments };
+        return newItem;
       }
-      return FeedItem;
+      return feedItem;
     });
-    if (this.CommentRef.value.length > 0) {
-      localStorage.setItem("Feed", JSON.stringify(FeedItemsCopy));
-      this.props.SetFeedData(FeedItemsCopy);
-      this.setState({ post: FeedItemsCopy[this.state.postID] });
-      this.CommentRef.value = "";
-      this.FirstCommentRef.scrollIntoView();
-      this.CommentRef.blur();
+    if (this.commentRef.value.length > 0) {
+      localStorage.setItem("feed", JSON.stringify(feedItemsCopy));
+      this.props.setFeedData(feedItemsCopy);
+      this.setState({ post: feedItemsCopy[this.state.postID] });
+      this.commentRef.value = "";
+      this.firstCommentRef.scrollIntoView();
+      this.commentRef.blur();
     }
   }
 
-  LikeDislike(LikeStatus) {
+  likeDislike(likeStatus) {
     return () => {
-      const PostLikedCopy = this.props.FeedItems[this.state.postID].likedby.map(
-        (Item, Index) => {
-          const NewItem = { ...Item };
-          return NewItem;
+      const postLikedCopy = this.props.feedItems[this.state.postID].likedby.map(
+        (item, index) => {
+          const newItem = { ...item };
+          return newItem;
         }
       );
 
-      if (this.props.LoggedIn) {
-        const FoundLike = PostLikedCopy.find((like, Index) => {
-          if (like.name === this.props.UserName) {
-            PostLikedCopy[Index].likestatus = LikeStatus;
+      if (this.props.loggedIn) {
+        const foundLike = postLikedCopy.find((like, index) => {
+          if (like.name === this.props.userName) {
+            postLikedCopy[index].likestatus = likeStatus;
             return like;
           }
           return null;
         });
-        const NewPostLikedCopy = !FoundLike
+        const newPostLikedCopy = !foundLike
           ? [
-              ...PostLikedCopy,
+              ...postLikedCopy,
               {
-                image: this.props.Image,
-                name: this.props.UserName,
-                likestatus: LikeStatus,
+                image: this.props.image,
+                name: this.props.userName,
+                likestatus: likeStatus,
               },
             ]
-          : PostLikedCopy;
+          : postLikedCopy;
 
-        const FeedItemsCopy = this.props.FeedItems.map((Item, Index) => {
-          if (Index === this.state.postID) {
-            const NewItem = { ...Item, likedby: NewPostLikedCopy };
-            return NewItem;
+        const feedItemsCopy = this.props.feedItems.map((item, index) => {
+          if (index === this.state.postID) {
+            const newItem = { ...item, likedby: newPostLikedCopy };
+            return newItem;
           }
-          return Item;
+          return item;
         });
-        localStorage.setItem("Feed", JSON.stringify(FeedItemsCopy));
-        this.props.SetFeedData(FeedItemsCopy);
-        this.setState({ post: FeedItemsCopy[this.state.postID] });
+        localStorage.setItem("feed", JSON.stringify(feedItemsCopy));
+        this.props.setFeedData(feedItemsCopy);
+        this.setState({ post: feedItemsCopy[this.state.postID] });
       }
     };
   }
@@ -103,142 +103,142 @@ export default class Post extends Component {
   render() {
     const postID = this.state.postID;
     const post = this.state.post;
-    const reversedcomments = [...post.comments].reverse();
+    const reversedComments = [...post.comments].reverse();
 
-    const likes = post.likedby.reduce((Sum, like) => {
-      return like.likestatus === "like" ? Sum + 1 : (Sum -= 1);
+    const likes = post.likedby.reduce((sum, like) => {
+      return like.likestatus === "like" ? sum + 1 : (sum -= 1);
     }, 0);
 
     return (
       <React.Fragment>
         <div>
-          {!localStorage.Feed[postID] || !localStorage.Feed ? (
-            <div className="PostNotFound"> Post with given ID doesnt exist</div>
+          {!localStorage.feed[postID] || !localStorage.feed ? (
+            <div className="postNotFound"> Post with given ID doesnt exist</div>
           ) : (
             <div
-              className="FeedItem"
+              className="feedItem"
               style={{
                 backgroundImage: `url(${
                   postID < 3 ? backgrounds[postID] : post.background
                 }),url('https://img.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg?size=626&ext=jpg')`,
               }}
             >
-              <div className="UpperPost">
-                <div className="LinearGrad"></div>
-                <div className="Title">{post.title}</div>
+              <div className="upperPost">
+                <div className="linearGrad"></div>
+                <div className="title">{post.title}</div>
               </div>
-              <div className="Lower">
-                <div style={{ fontSize: "1.2rem" }} className="PostFullText">
+              <div className="lower">
+                <div style={{ fontSize: "1.2rem" }} className="postFullText">
                   {post.post}
                 </div>
-                <div className="AuthorDate">
-                  <div className="Author">
-                    By <span className="Name">{post.author}</span>
+                <div className="authorDate">
+                  <div className="author">
+                    By <span className="name">{post.author}</span>
                   </div>
-                  <div className="Date">{post.date}</div>
+                  <div className="date">{post.date}</div>
                 </div>
-                <div className="Likes">
-                  <div className="LikedBy">
+                <div className="likes">
+                  <div className="likedBy">
                     {postID < 3 ? (
                       <React.Fragment>
                         <img
-                          className="LikeImages"
-                          alt="LikedBy"
+                          className="likeImages"
+                          alt="likedBy"
                           src={postID < 3 ? images[2 * postID] : null}
                         ></img>
                         <img
-                          className="LikeImages"
-                          alt="LikedBy"
+                          className="likeImages"
+                          alt="likedBy"
                           src={postID < 3 ? images[2 * postID + 1] : null}
                         ></img>
                       </React.Fragment>
                     ) : (
-                      post.likedby.map((LikedBy, Index) => {
+                      post.likedby.map((likedBy, index) => {
                         return (
                           <img
-                            key={Index}
-                            className="LikeImages"
-                            alt="LikedBy"
-                            src={LikedBy.image}
+                            key={index}
+                            className="likeImages"
+                            alt="likedBy"
+                            src={likedBy.image}
                           ></img>
                         );
                       })
                     )}
-                    <div className="LikeCount">
+                    <div className="likeCount">
                       {likes - 1 >= 0 ? "+" : null}
                       {likes}
                     </div>
-                    <span className="LikedThis">
+                    <span className="likedThis">
                       {" "}
                       {likes - 1 >= 0 ? "Liked this" : "Disliked this"}
                     </span>
                   </div>
-                  {this.props.LoggedIn ? (
-                    <div className="LikePost">
+                  {this.props.loggedIn ? (
+                    <div className="likePost">
                       <img
-                        alt="Like"
-                        className="LikeImage"
+                        alt="like"
+                        className="likeImage"
                         height="20px"
                         width="20px"
-                        src={like}
-                        onClick={this.LikeDislike("like")}
+                        src={Like}
+                        onClick={this.likeDislike("like")}
                       ></img>
                       <img
                         alt="Dislike"
-                        className="LikeImage"
+                        className="likeImage"
                         height="20px"
                         width="20px"
-                        src={dislike}
-                        onClick={this.LikeDislike("dislike")}
+                        src={Dislike}
+                        onClick={this.likeDislike("dislike")}
                       ></img>
                     </div>
                   ) : (
-                    <div className="YouNeedToLogIn"> Please Log In to Like</div>
+                    <div className="youNeedToLogIn"> Please Log In to Like</div>
                   )}
                 </div>
               </div>
 
-              <div className="PostComments">
-                <div className="CommentsTitle">Comments</div>
-                {this.props.LoggedIn ? (
-                  <div className="Comment">
-                    <div className="CommentCont">
+              <div className="postComments">
+                <div className="commentsTitle">Comments</div>
+                {this.props.loggedIn ? (
+                  <div className="comment">
+                    <div className="commentCont">
                       <textarea
-                        ref={(Elem) => {
-                          this.CommentRef = Elem;
+                        ref={(elem) => {
+                          this.commentRef = elem;
                         }}
-                        className="CommentText"
+                        className="commentText"
                       ></textarea>
                     </div>
-                    <div className="SubmitComment">
+                    <div className="submitComment">
                       <button
-                        onClick={this.SubmitComment}
-                        className="SubmitCommentButton"
+                        onClick={this.submitComment}
+                        className="submitCommentButton"
                       >
                         Comment
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <div style={{ margin: "auto" }} className="YouNeedToLogIn">
+                  <div style={{ margin: "auto" }} className="youNeedToLogIn">
                     You need to Log In to be able to Comment
                   </div>
                 )}
-                {reversedcomments.map((Comment, Index) => {
+                {reversedComments.map((comment, index) => {
                   return (
                     <div
-                      key={Index}
+                      key={index}
                       ref={
-                        Index === 0
-                          ? (Elem) => {
-                              this.FirstCommentRef = Elem;
+                        index === 0
+                          ? (elem) => {
+                              this.firstCommentRef = elem;
                             }
                           : null
                       }
-                      className="IndividualComment"
+                      className="individualComment"
                     >
-                      <div>{Comment.comment}</div>
-                      <div className="CommentAuthor">{Comment.author}</div>
+                      <div>{comment.comment}</div>
+                      <div className="commentAuthor">{comment.author}</div>
                     </div>
                   );
                 })}

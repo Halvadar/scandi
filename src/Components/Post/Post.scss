@@ -1,4 +1,4 @@
-.PostFullText {
+.postFullText {
   position: relative;
   z-index: 5;
   padding-top: 2%;
@@ -10,7 +10,7 @@
   border-bottom: 1px solid rgb(119, 119, 119);
   width: 100%;
 }
-.AddYourPost {
+.addYourPost {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,21 +19,21 @@
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
-.AddYourPostImg {
+.addYourPostImg {
   height: 30px;
   width: 30px;
   margin-bottom: 1rem;
 }
-.AddYourPostImg:hover {
+.addYourPostImg:hover {
   cursor: pointer;
 }
 @media only screen and (min-width: 500px) {
-  .AddYourPostImg {
+  .addYourPostImg {
     height: 40px;
     width: 40px;
   }
 }
-.PostComments {
+.postComments {
   border-top: 1px solid rgb(255, 226, 226);
   width: 90%;
   margin-top: 2rem;
@@ -44,19 +44,19 @@
   font-size: 1.1rem;
   margin-bottom: 2rem;
 }
-.LikePost {
+.likePost {
   display: flex;
 }
-.LikeImage {
+.likeImage {
   margin: 0.7rem;
   position: relative;
 }
-.LikeImage:hover {
+.likeImage:hover {
   cursor: pointer;
   bottom: 3px;
 }
 
-.IndividualComment {
+.individualComment {
   margin: 1rem auto;
   width: 100%;
   border: 1px solid rgb(108, 108, 255);
@@ -66,41 +66,41 @@
   box-sizing: border-box;
 }
 
-.CommentsTitle {
+.commentsTitle {
   margin: 2rem auto;
   color: rgb(166, 166, 255);
   font-size: 1.4rem;
 }
-.Comment {
+.comment {
   width: 90%;
   margin: auto;
   display: flex;
   flex-direction: column;
 }
-.UpperPost {
+.upperPost {
   display: flex;
   flex-direction: column;
   position: relative;
   align-items: center;
 }
-.CommentCont {
+.commentCont {
   height: 7rem;
   width: 100%;
 }
-.CommentText {
+.commentText {
   height: 100%;
   width: 100%;
   box-sizing: border-box;
   border-radius: 5px;
 }
-.SubmitComment {
+.submitComment {
   align-self: flex-end;
   height: 2.5rem;
   width: 5rem;
   margin-top: 2rem;
   margin-bottom: 1rem;
 }
-.SubmitCommentButton {
+.submitCommentButton {
   padding: 0;
   height: 100%;
   width: 100%;
@@ -109,12 +109,12 @@
   color: white;
 }
 
-.CommentAuthor {
+.commentAuthor {
   align-self: flex-end;
   color: rgb(90, 90, 253);
   font-size: 1.1;
 }
 
-.YouNeedToLogIn {
+.youNeedToLogIn {
   color: rgb(255, 204, 204);
 }

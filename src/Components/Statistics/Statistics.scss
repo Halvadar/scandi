@@ -1,4 +1,4 @@
-.Statistic {
+.statistic {
   display: flex;
   flex-direction: column;
   background: #161823;
@@ -7,12 +7,12 @@
   position: relative;
 }
 
-.GoBack_LogoCont {
+.goBack_LogoCont {
   display: flex;
   justify-content: center;
   margin: 5rem 2rem 2rem 2rem;
 }
-.DiagramClickInfo {
+.diagramClickInfo {
   width: 15px;
   height: 15px;
   border-radius: 50%;
@@ -22,17 +22,17 @@
   justify-content: center;
   align-items: center;
 }
-.DiagramClickInfo:hover {
+.diagramClickInfo:hover {
   cursor: pointer;
 }
-.DiagramClickInside {
+.diagramClickInside {
   background: white;
   width: 5px;
   height: 5px;
   border-radius: 50%;
 }
 
-.GoBack {
+.goBack {
   position: fixed;
   top: 15px;
   height: 1.5rem;
@@ -42,25 +42,25 @@
   padding: 0.5rem;
   z-index: 11;
 }
-.Logo {
+.logo {
   display: flex;
   align-items: center;
   color: white;
   font-size: 1.4rem;
 }
-.LogoImg {
+.logoImg {
   margin: 0 1rem;
   width: 2rem;
   height: 2rem;
 }
-.Months {
+.months {
   margin-top: 2rem;
   display: flex;
   width: max-content;
   background: #0e0f1a;
   position: relative;
 }
-.Month {
+.month {
   padding: 1rem;
   margin: 0 1rem;
   color: rgb(255, 255, 255);
@@ -68,22 +68,22 @@
   position: relative;
   border-radius: 5px;
 }
-.Month:hover {
+.month:hover {
   cursor: pointer;
   background: rgb(120, 166, 252);
 }
 
-.MonthsContainer {
+.monthsContainer {
   overflow-x: scroll;
 }
-.Chart {
+.chart {
   display: flex;
   justify-content: center;
   margin: 4rem auto 2rem auto;
   width: fit-content;
 }
 
-.Circle {
+.circle {
   width: 13rem;
   height: 13rem;
   border-radius: 50%;
@@ -92,13 +92,13 @@
   justify-content: center;
   align-items: center;
 }
-.Circle1 {
+.circle1 {
   width: 10rem;
   height: 10rem;
   border-radius: 50%;
   background: #161823;
 }
-.DataInfoCont {
+.dataInfoCont {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -106,17 +106,17 @@
   margin-bottom: 2rem;
   height: 4rem;
 }
-.DataInfo {
+.dataInfo {
   display: flex;
   flex-direction: column;
   align-items: center;
   font-size: 1.5rem;
 }
-.DataName {
+.dataName {
   color: rgb(223, 223, 223);
   font-size: 1.5rem;
 }
-.CenterBalance {
+.centerBalance {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -126,16 +126,16 @@
   flex-direction: column;
   align-items: center;
 }
-.BalanceNumber {
+.balanceNumber {
   color: white;
   font-size: 1.2rem;
   display: flex;
   align-items: flex-start;
 }
-.DecimalPortion {
+.decimalPortion {
   font-size: 0.7rem;
 }
-.DecimalPortionIncomeExpense {
+.decimalPortionIncomeExpense {
   padding: 3px 0;
   font-size: 0.7rem;
   display: flex;
@@ -143,17 +143,17 @@
   justify-content: space-between;
   margin: 0 3px;
 }
-.Balance {
+.balance {
   color: rgb(163, 163, 163);
   font-size: 1.1rem;
   padding-top: 5px;
 }
-.IncomeExpense {
+.incomeExpense {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
 }
-.Income {
+.income {
   padding: 0.5rem 0.7rem;
   border-radius: 5%;
   border: 1px solid rgb(112, 112, 255);
@@ -164,7 +164,7 @@
   position: relative;
   display: flex;
 }
-.Expense {
+.expense {
   padding: 0.5rem 0.7rem;
   border-radius: 5%;
   border: 1px solid rgb(255, 100, 100);
@@ -175,14 +175,14 @@
   position: relative;
   display: flex;
 }
-.YouNeedToSignIn {
+.youNeedToSignIn {
   padding: 5px;
   font-size: 1.5rem;
   color: rgb(255, 110, 110);
   margin: 3rem auto;
 }
 
-.AddData {
+.addData {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -190,7 +190,7 @@
   width: 100%;
 }
 
-%Message {
+%message {
   display: flex;
   flex-direction: column;
   width: 90%;
@@ -198,19 +198,19 @@
   font-size: 1.3rem;
   align-items: center;
 }
-.IncomeInputCont {
-  @extend %Message;
+.incomeInputCont {
+  @extend %message;
   border-bottom: 1px solid rgb(255, 138, 138);
   padding-bottom: 2rem;
 }
-.AddYourSpendings {
-  @extend %Message;
+.addYourSpendings {
+  @extend %message;
 }
-.GoBack:hover {
+.goBack:hover {
   cursor: pointer;
 }
 
-.DataAddCont {
+.dataAddCont {
   display: flex;
   margin: 2rem;
   color: rgb(0, 30, 128);
@@ -222,61 +222,61 @@
   box-sizing: border-box;
   position: relative;
 }
-.IncomeInput {
+.incomeInput {
   height: 2rem;
   font-size: 1.5rem;
   padding: 2px;
   width: 50%;
   margin: 2rem;
 }
-.DataAddValueCont {
+.dataAddValueCont {
   position: relative;
   display: flex;
 }
-.AddAnotherValue {
+.addAnotherValue {
   position: absolute;
   right: 0;
   top: 50%;
   transform: translate(0, -50%);
   height: 70%;
 }
-.AddAnotherValue:hover {
+.addAnotherValue:hover {
   cursor: pointer;
 }
-.SecondValueInputCont {
+.secondValueInputCont {
   position: relative;
 }
-.DataAddNameCont {
+.dataAddNameCont {
   display: flex;
   margin: 1rem;
   justify-items: center;
 }
-.DataAddNameInput {
+.dataAddNameInput {
   height: 2rem;
   font-size: 1.1rem;
   width: 100%;
 }
-.AddData input {
+.addData input {
   border-radius: 5px;
   border: 1px solid black;
   padding: 5px;
   box-sizing: border-box;
   margin: 0 0.5rem;
 }
-.AddAnotherMonthData {
+.addAnotherMonthData {
   display: flex;
   justify-content: center;
 }
-.AddAnotherMonthData:hover {
+.addAnotherMonthData:hover {
   cursor: pointer;
 }
-.ChangeDataEntries {
+.changeDataEntries {
   display: flex;
   justify-content: center;
   margin: 3rem 0 0 0;
 }
 
-.ChangeDataEntriesButton {
+.changeDataEntriesButton {
   background: rgba(135, 241, 135, 0.137);
   color: white;
   font-size: 1.3rem;
@@ -285,15 +285,15 @@
   padding: 0.5rem;
   border: 0;
 }
-.ChangeDataEntriesButton:hover {
+.changeDataEntriesButton:hover {
   background: rgb(133, 248, 133);
   cursor: pointer;
 }
-.SubmitButton:hover {
+.submitButton:hover {
   cursor: pointer;
 }
 
-.DeleteDataEntry {
+.deleteDataEntry {
   position: absolute;
   top: 0;
   right: 0;
@@ -302,7 +302,7 @@
   height: 20px;
   border-radius: 50%;
 }
-.DeleteDataEntry:hover {
+.deleteDataEntry:hover {
   cursor: pointer;
 }
 
@@ -316,18 +316,18 @@
 }
 
 @media only screen and (min-width: 500px) {
-  .Month {
+  .month {
     font-size: 20px;
   }
 
-  .LogoImg {
+  .logoImg {
     height: 1.5rem;
     width: 1.5rem;
   }
-  .Income {
+  .income {
     padding: 1rem 1.5rem;
   }
-  .Expense {
+  .expense {
     padding: 1rem 1.5rem;
   }
   ::-webkit-scrollbar {

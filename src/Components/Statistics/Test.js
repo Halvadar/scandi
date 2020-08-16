@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Plus from "./Plus.svg";
-import Minus from "./minus.svg";
+import Minus from "./Minus.svg";
 
 export default class Test extends Component {
   constructor() {

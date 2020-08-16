@@ -1,27 +1,27 @@
 import React, { Component } from "react";
 import "./Feed.scss";
-import image0 from "./image0.png";
-import image1 from "./image1.png";
-import image2 from "./image2.png";
-import image3 from "./image3.png";
-import image4 from "./image4.png";
-import image5 from "./image5.png";
-import background0 from "./Background0.jpg";
-import background1 from "./Background1.jpg";
-import background2 from "./Background2.jpg";
+import Image0 from "./Image0.png";
+import Image1 from "./Image1.png";
+import Image2 from "./Image2.png";
+import Image3 from "./Image3.png";
+import Image4 from "./Image4.png";
+import Image5 from "./Image5.png";
+import Background0 from "./Background0.jpg";
+import Background1 from "./Background1.jpg";
+import Background2 from "./Background2.jpg";
 import Plus from "../Statistics/PlusData.svg";
 
-const backgrounds = [background0, background1, background2];
-const images = [image0, image1, image2, image3, image4, image5];
+const backgrounds = [Background0, Background1, Background2];
+const images = [Image0, Image1, Image2, Image3, Image4, Image5];
 export class Feed extends Component {
   constructor() {
     super();
     this.state = {
-      PreviewWidth: undefined,
-      ImageValid: false,
+      previewWidth: undefined,
+      imageValid: false,
     };
-    this.AddYourPost = this.AddYourPost.bind(this);
-    this.ResizeFunc = this.ResizeFunc.bind(this);
+    this.addYourPost = this.addYourPost.bind(this);
+    this.resizeFunc = this.resizeFunc.bind(this);
     this.goToPost = this.goToPost.bind(this);
   }
   goToPost(arg) {
@@ -32,124 +32,124 @@ export class Feed extends Component {
 
   componentDidMount() {
     this.setState({
-      PreviewWidth: window
-        .getComputedStyle(this.PreviewRef)
+      previewWidth: window
+        .getComputedStyle(this.previewRef)
         .getPropertyValue("width"),
     });
-    window.addEventListener("resize", this.ResizeFunc);
+    window.addEventListener("resize", this.resizeFunc);
   }
   componentWillUnmount() {
-    window.removeEventListener("resize", this.ResizeFunc);
+    window.removeEventListener("resize", this.resizeFunc);
   }
-  ResizeFunc() {
+  resizeFunc() {
     this.setState({
-      PreviewWidth: window
-        .getComputedStyle(this.PreviewRef)
+      previewWidth: window
+        .getComputedStyle(this.previewRef)
         .getPropertyValue("width"),
     });
   }
-  AddYourPost() {
-    this.props.history.push("/AddNewPost");
+  addYourPost() {
+    this.props.history.push("/addNewPost");
   }
 
   render() {
     return (
-      <div className="FeedContainer">
-        <div className="AddYourPost">
+      <div className="feedContainer">
+        <div className="addYourPost">
           <img
             alt="Add a New post"
             src={Plus}
-            className="AddYourPostImg"
-            onClick={this.AddYourPost}
+            className="addYourPostImg"
+            onClick={this.addYourPost}
           ></img>
           <div> Add a New Post</div>
         </div>
-        {this.props.FeedItems.map((FeedItem, FeedItemIndex) => {
-          const likes = FeedItem.likedby.reduce(
-            (Sum, LikeDislike) =>
-              LikeDislike.likestatus === "like" ? Sum++ : (Sum -= 1),
+        {this.props.feedItems.map((feedItem, feedItemIndex) => {
+          const likes = feedItem.likedby.reduce(
+            (sum, likeDislike) =>
+              likeDislike.likestatus === "like" ? sum++ : (sum -= 1),
             0
           );
 
           return (
             <div
-              key={FeedItemIndex}
-              className="FeedItem"
+              key={feedItemIndex}
+              className="feedItem"
               style={{
                 backgroundImage: `url(${
-                  FeedItemIndex < 3
-                    ? backgrounds[FeedItemIndex]
-                    : FeedItem.background
+                  feedItemIndex < 3
+                    ? backgrounds[feedItemIndex]
+                    : feedItem.background
                 }),url('https://img.freepik.com/free-vector/abstract-technology-particle-background_52683-25766.jpg?size=626&ext=jpg')`,
               }}
             >
               <div
                 title="Go To Post"
-                className="Upper"
-                onClick={this.goToPost(`/post/${FeedItemIndex}`)}
+                className="upper"
+                onClick={this.goToPost(`/post/${feedItemIndex}`)}
               >
-                <div className="LinearGrad"></div>
-                <div className="Title TitleFeed">{FeedItem.title}</div>
+                <div className="linearGrad"></div>
+                <div className="title titleFeed">{feedItem.title}</div>
               </div>
-              <div className="Lower">
+              <div className="lower">
                 <div
-                  className="Preview"
-                  ref={(Elem) => (this.PreviewRef = Elem)}
+                  className="preview"
+                  ref={(elem) => (this.previewRef = elem)}
                 >
                   <div
-                    className="PreviewContent"
+                    className="previewContent"
                     style={{
-                      columnWidth: this.state.PreviewWidth
-                        ? this.state.PreviewWidth
+                      columnWidth: this.state.previewWidth
+                        ? this.state.previewWidth
                         : null,
                     }}
                   >
-                    {FeedItem.post}
+                    {feedItem.post}
                   </div>
                 </div>
-                <div className="AuthorDate">
-                  <div className="Author">
-                    By <span className="Name">{FeedItem.author}</span>
+                <div className="authorDate">
+                  <div className="author">
+                    By <span className="name">{feedItem.author}</span>
                   </div>
-                  <div className="Date">{FeedItem.date}</div>
+                  <div className="date">{feedItem.date}</div>
                 </div>
-                <div style={{ justifyContent: "flex-start" }} className="Likes">
-                  {FeedItemIndex < 3 ? (
+                <div style={{ justifyContent: "flex-start" }} className="likes">
+                  {feedItemIndex < 3 ? (
                     <React.Fragment>
                       <img
-                        className="LikeImages"
-                        alt="LikedBy"
+                        className="likeImages"
+                        alt="likedBy"
                         src={
-                          FeedItemIndex < 3 ? images[2 * FeedItemIndex] : null
+                          feedItemIndex < 3 ? images[2 * feedItemIndex] : null
                         }
                       ></img>
                       <img
-                        className="LikeImages"
-                        alt="LikedBy"
+                        className="likeImages"
+                        alt="likedBy"
                         src={
-                          FeedItemIndex < 3
-                            ? images[2 * FeedItemIndex + 1]
+                          feedItemIndex < 3
+                            ? images[2 * feedItemIndex + 1]
                             : null
                         }
                       ></img>
                     </React.Fragment>
                   ) : (
-                    FeedItem.likedby.map((LikeDislike, LikeDislikeIndex) => {
+                    feedItem.likedby.map((likeDislike, likeDislikeIndex) => {
                       return (
                         <img
-                          key={LikeDislikeIndex}
-                          className="LikeImages"
-                          alt="LikedBy"
-                          src={LikeDislike.image}
+                          key={likeDislikeIndex}
+                          className="likeImages"
+                          alt="likedBy"
+                          src={likeDislike.image}
                         ></img>
                       );
                     })
                   )}
-                  <div className="LikeCount">
+                  <div className="likeCount">
                     {likes - 1 >= 0 ? "+" : null}
                     {likes}
                   </div>
-                  <span className="LikedThis">Liked This</span>
+                  <span className="likedThis">Liked This</span>
                 </div>
               </div>
             </div>

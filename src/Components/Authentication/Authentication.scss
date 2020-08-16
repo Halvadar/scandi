@@ -1,4 +1,4 @@
-.AuthenticationContainer {
+.authenticationContainer {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -10,20 +10,20 @@
   position: relative;
 }
 
-.PleaseEnter {
+.pleaseEnter {
   margin: 5rem 1rem;
 }
 %loginpsw {
   margin: 2rem auto;
 }
-.Login {
+.login {
   @extend %loginpsw;
 }
-.Password {
+.password {
   @extend %loginpsw;
 }
 
-.Input {
+.input {
   height: 3rem;
   width: 95%;
   padding: 2px 2rem;
@@ -31,7 +31,7 @@
   box-sizing: border-box;
   color: rgb(92, 92, 92);
 }
-.SubmitButton {
+.submitButton {
   background: rgb(81, 63, 247);
   border-radius: 5%;
   width: 7rem;
@@ -41,14 +41,14 @@
   font-size: 1.5rem;
   padding: 0;
 }
-.ShowUserName {
+.showUserName {
   background: rgb(255, 255, 255);
   color: rgb(104, 144, 255);
   text-align: center;
   border-radius: 2px;
   font-size: 1.5rem;
 }
-.ProfilePicCont {
+.profilePicCont {
   position: fixed;
   top: 1.5rem;
   z-index: 20;
@@ -56,11 +56,11 @@
   flex-direction: column;
   align-items: flex-end;
 }
-.LoggedIn {
+.loggedIn {
   margin: 4rem 2rem 2rem 2rem;
   font-size: 1.3rem;
 }
-.LogOut {
+.logOut {
   background: rgb(255, 147, 147);
   font-size: 1.3rem;
   display: flex;
@@ -71,22 +71,22 @@
   color: white;
   margin: 1rem;
 }
-.LogOut:hover {
+.logOut:hover {
   cursor: pointer;
 }
-.ErrorMessage {
+.errorMessage {
   height: 2rem;
   text-align: center;
   color: red;
   font-size: 1.3rem;
 }
-.AbsProfilePic {
+.absProfilePic {
   border-radius: 50%;
   height: 40px;
   width: 40px;
 }
 @media only screen and(min-width:500px) {
-  .AuthenticationContainer {
+  .authenticationContainer {
     width: 70%;
   }
 }
